@@ -1,11 +1,11 @@
-package com.flic.courseRegister.service.impl;
+package com.flic.courseRegister.service.user.impl;
 
-import com.flic.courseRegister.dto.UserCreateDTO;
-import com.flic.courseRegister.dto.UserViewDTO;
+import com.flic.courseRegister.dto.user.UserCreateDTO;
+import com.flic.courseRegister.dto.user.UserViewDTO;
 import com.flic.courseRegister.entity.User;
-import com.flic.courseRegister.mapper.UserMapper;
+import com.flic.courseRegister.mapper.user.UserMapper;
 import com.flic.courseRegister.repository.UserRepository;
-import com.flic.courseRegister.service.UserService;
+import com.flic.courseRegister.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

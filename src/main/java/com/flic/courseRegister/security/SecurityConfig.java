@@ -2,7 +2,9 @@ package com.flic.courseRegister.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -21,13 +23,19 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
                 )
+//                sau ni bảo mật thì dùng cái ni
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+//                        .requestMatchers("/api/public/**").permitAll()
+//                        .anyRequest().authenticated()
+//                )
                 .formLogin(form -> form.disable())
                 .httpBasic(httpBasic -> httpBasic.disable());
 
         return http.build();
     }
 
-    // ✅ Cho phép CORS từ http://127.0.0.1:5500 (Live Server)
+    //  Cho phép CORS từ http://127.0.0.1:5500 (Live Server)
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();

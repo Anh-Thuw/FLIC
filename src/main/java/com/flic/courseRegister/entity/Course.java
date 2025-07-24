@@ -58,6 +58,7 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Lesson> lessons;
 
+
     // THÊM: Lifecycle callbacks để tự động set created/updated time
     @PrePersist
     protected void onCreate() {

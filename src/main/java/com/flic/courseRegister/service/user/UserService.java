@@ -1,7 +1,7 @@
-package com.flic.courseRegister.service;
+package com.flic.courseRegister.service.user;
 
-import com.flic.courseRegister.dto.UserCreateDTO;
-import com.flic.courseRegister.dto.UserViewDTO;
+import com.flic.courseRegister.dto.user.UserCreateDTO;
+import com.flic.courseRegister.dto.user.UserViewDTO;
 
 import java.util.List;
 

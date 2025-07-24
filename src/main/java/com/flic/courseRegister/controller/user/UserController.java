@@ -1,8 +1,8 @@
-package com.flic.courseRegister.controller;
+package com.flic.courseRegister.controller.user;
 
-import com.flic.courseRegister.dto.UserCreateDTO;
-import com.flic.courseRegister.dto.UserViewDTO;
-import com.flic.courseRegister.service.UserService;
+import com.flic.courseRegister.dto.user.UserCreateDTO;
+import com.flic.courseRegister.dto.user.UserViewDTO;
+import com.flic.courseRegister.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,7 +1,7 @@
-package com.flic.courseRegister.mapper;
+package com.flic.courseRegister.mapper.user;
 
-import com.flic.courseRegister.dto.UserCreateDTO;
-import com.flic.courseRegister.dto.UserViewDTO;
+import com.flic.courseRegister.dto.user.UserCreateDTO;
+import com.flic.courseRegister.dto.user.UserViewDTO;
 import com.flic.courseRegister.entity.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;

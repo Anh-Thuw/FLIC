@@ -1,6 +1,6 @@
-package com.flic.courseRegister.mapper;
+package com.flic.courseRegister.mapper.lecture;
 
-import com.flic.courseRegister.dto.LecturerViewDTO;
+import com.flic.courseRegister.dto.lecture.LecturerViewDTO;
 import com.flic.courseRegister.entity.InstructorProfile;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.flic.courseRegister.dto;
+package com.flic.courseRegister.dto.lecture;
 
 import com.flic.courseRegister.entity.User;
 import lombok.AllArgsConstructor;

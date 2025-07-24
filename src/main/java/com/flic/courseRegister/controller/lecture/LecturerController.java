@@ -1,7 +1,7 @@
-package com.flic.courseRegister.controller;
+package com.flic.courseRegister.controller.lecture;
 
-import com.flic.courseRegister.dto.LecturerViewDTO;
-import com.flic.courseRegister.service.LecturerService;
+import com.flic.courseRegister.dto.lecture.LecturerViewDTO;
+import com.flic.courseRegister.service.lecture.impl.LecturerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

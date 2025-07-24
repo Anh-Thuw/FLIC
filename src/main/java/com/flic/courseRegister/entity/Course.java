@@ -35,6 +35,11 @@ public class Course {
     @Column(name = "is_published")
     private Boolean isPublished;
 
+    private String status;          // "active", "inactive", "draft"
+
+    private Integer duration;       // Thời lượng khóa học (phút)
+    private String language;        // Ngôn ngữ: "vi", "en"
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -50,7 +55,25 @@ public class Course {
     @OneToMany(mappedBy = "courseId", cascade = CascadeType.ALL)
     private List<Enrollment> enrollments;
 
-     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-     private List<Lesson> lessons;
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<Lesson> lessons;
+
+    // THÊM: Lifecycle callbacks để tự động set created/updated time
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    // THÊM: Helper method để mapping status từ isPublished
+    public String getStatusFromPublished() {
+        if (isPublished == null) return "draft";
+        return isPublished ? "active" : "inactive";
+    }
 }
 

@@ -1,10 +1,10 @@
-package com.flic.courseRegister.service.impl;
+package com.flic.courseRegister.service.lecture;
 
-import com.flic.courseRegister.dto.LecturerViewDTO;
+import com.flic.courseRegister.dto.lecture.LecturerViewDTO;
 import com.flic.courseRegister.entity.InstructorProfile;
-import com.flic.courseRegister.mapper.LecturerMapper;
+import com.flic.courseRegister.mapper.lecture.LecturerMapper;
 import com.flic.courseRegister.repository.LecturerRepository;
-import com.flic.courseRegister.service.LecturerService;
+import com.flic.courseRegister.service.lecture.impl.LecturerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

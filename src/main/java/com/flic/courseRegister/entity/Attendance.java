@@ -33,7 +33,7 @@ public class Attendance {
     private LocalDateTime checkedAt;
 
     public enum Status {
-        PRESENT, ABSENT, LATE, EXCUSED
+        present, absent, late, excused
     }
 }
 

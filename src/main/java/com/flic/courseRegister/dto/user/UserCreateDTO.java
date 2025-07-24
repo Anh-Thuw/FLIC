@@ -1,5 +1,6 @@
-package com.flic.courseRegister.dto;
+package com.flic.courseRegister.dto.user;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,12 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserViewDTO {
-    private Long id;
+public class UserCreateDTO {
+    @NotBlank
     private String email;
+
+    @NotBlank
+    private String password;
+
     private String fullName;
-    private String avatarUrl;
-    private String role;
-    private String status;
 }
 

@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "courses")
@@ -20,25 +19,25 @@ public class Course {
     private Long id;
 
     private String title;
-    private String slug;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "thumbnail_url")
-    private String thumbnailUrl;
+    private BigDecimal rating;
 
-    @Column(name = "intro_video_url")
-    private String introVideoUrl;
-
-    private String level;
     private BigDecimal price;
 
-    @Column(name = "is_published")
-    private Boolean isPublished;
+    private Integer duration;
 
-    private String status;          // "active", "inactive", "draft"
+    private String status;
 
-    private Integer duration;       // Thời lượng khóa học (phút)
-    private String language;        // Ngôn ngữ: "vi", "en"
+    private String image;
+
+    @Column(name = "start_month")
+    private String startMonth;
+
+    @Enumerated(EnumType.STRING)
+    private CourseType type; // ENUM('short_course', 'cert_exam')
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -46,20 +45,6 @@ public class Course {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Instructor (User)
-    @ManyToOne
-    @JoinColumn(name = "instructor_id", referencedColumnName = "id")
-    private User instructor;
-
-    // Enrolments
-    @OneToMany(mappedBy = "courseId", cascade = CascadeType.ALL)
-    private List<Enrollment> enrollments;
-
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
-    private List<Lesson> lessons;
-
-
-    // THÊM: Lifecycle callbacks để tự động set created/updated time
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -71,10 +56,8 @@ public class Course {
         updatedAt = LocalDateTime.now();
     }
 
-    // THÊM: Helper method để mapping status từ isPublished
-    public String getStatusFromPublished() {
-        if (isPublished == null) return "draft";
-        return isPublished ? "active" : "inactive";
+    public enum CourseType {
+        short_course,
+        cert_exam
     }
 }
-

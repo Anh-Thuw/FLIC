@@ -4,7 +4,9 @@ import com.flic.courseRegister.dto.admin.NewsDTO;
 import com.flic.courseRegister.entity.NewsArticle;
 import com.flic.courseRegister.repository.NewsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class NewsMapper {
     private final NewsRepository newsRepos;

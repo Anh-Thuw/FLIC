@@ -12,7 +12,13 @@ public class CourseAdminMapper {
         return CourseAdminViewDTO.builder()
                 .id(course.getId())
                 .title(course.getTitle())
-                .status(course.getStatus() != null ? course.getStatus() : course.getStatusFromPublished())
+                .status(course.getStatus())
+                .price(course.getPrice())
+                .rating(course.getRating())
+                .duration(course.getDuration())
+                .startMonth(course.getStartMonth())
+                .type(course.getType())
+                .createdAt(course.getCreatedAt())
                 .build();
     }
 }

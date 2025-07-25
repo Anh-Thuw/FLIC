@@ -1,5 +1,6 @@
 package com.flic.courseRegister.dto.admin;
 
+import com.flic.courseRegister.entity.Course;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -11,6 +12,10 @@ public class CourseUpdateDTO {
     private String description;
     private BigDecimal price;
     private Integer duration;
-    private String level;
-    private Boolean isPublished;        // chuyển trạng thái
+    private String status;  // "active", "inactive", "draft"
+    private String image;
+    private String startMonth;
+    private Course.CourseType type;
+    private BigDecimal rating;  // Admin có thể cập nhật rating
 }
+

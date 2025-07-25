@@ -22,7 +22,6 @@ public class NewsMapper {
                 .avatarUrl(entity.getAvatarUrl())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
-                .userId(entity.getUser().getId())
                 .build();
 
     }

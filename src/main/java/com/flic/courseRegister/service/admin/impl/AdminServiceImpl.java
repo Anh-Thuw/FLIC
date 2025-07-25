@@ -43,10 +43,18 @@ public class AdminServiceImpl implements AdminService {
 
     //Lấy danh sách khóa học
     @Override
-    public List<CourseAdminViewDTO> getAllCourses(String status) {
-        List<Course> courses = (status == null)
-                ? courseRepo.findAllByOrderByCreatedAtDesc()
-                : courseRepo.findByStatus(status);
+    public List<CourseAdminViewDTO> getAllCourses(String status, Course.CourseType type) {
+        List<Course> courses;
+
+        if (status != null && type != null) {
+            courses = courseRepo.findByStatusAndType(status, type);
+        } else if (status != null) {
+            courses = courseRepo.findByStatus(status);
+        } else if (type != null) {
+            courses = courseRepo.findByType(type);
+        } else {
+            courses = courseRepo.findAllByOrderByCreatedAtDesc();
+        }
 
         return courses.stream()
                 .map(courseMapper::toDto)

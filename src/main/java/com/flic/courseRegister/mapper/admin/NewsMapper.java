@@ -1,9 +1,8 @@
 package com.flic.courseRegister.mapper.admin;
+
 import com.flic.courseRegister.dto.admin.NewsDTO;
 import com.flic.courseRegister.entity.NewsArticle;
-import com.flic.courseRegister.entity.User;
 import com.flic.courseRegister.repository.NewsRepository;
-import com.flic.courseRegister.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

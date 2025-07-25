@@ -23,11 +23,9 @@ public class NewsController {
 
     @PostMapping
     public ResponseEntity<NewsDTO> createNews(@RequestBody NewsDTO dto, HttpServletRequest request) {
-        String token = jwtUtils.extractTokenFromRequest(request);
-        Long userId = jwtUtils.extractUserIdFromToken(token);
-
-        dto.setUserId(userId);
-
+//        String token = jwtUtils.extractTokenFromRequest(request);
+//        Long userId = jwtUtils.extractUserIdFromToken(token);
+        dto.setUserId(1L);
         NewsDTO saved = newsService.createNews(dto);
         return ResponseEntity.ok(saved);
     }

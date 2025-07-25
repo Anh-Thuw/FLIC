@@ -1,5 +1,6 @@
 package com.flic.courseRegister.dto.lecture;
 
+import com.flic.courseRegister.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,16 +14,12 @@ import java.math.BigDecimal;
 @Builder
 public class CourseLecturerViewDTO {
     private Long id;
+    private String lecturerInCharge;
     private String title;
     private String description;
-    private String thumbnailUrl;
-    private String level;
-    private String slug;
+    private BigDecimal rating;
     private BigDecimal price;
-    private Boolean isPublished;
+    private Integer duration;
     private String status;
-    public String getStatusFromPublished() {
-        if (isPublished == null) return "draft";
-        return isPublished ? "active" : "inactive";
-    }
+    private String image;
 }

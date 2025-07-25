@@ -1,6 +1,7 @@
 package com.flic.courseRegister.controller.admin;
 
 import com.flic.courseRegister.dto.admin.*;
+import com.flic.courseRegister.entity.Course;
 import com.flic.courseRegister.service.admin.AdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +36,10 @@ public class AdminController {
     // Xem ds courses
     @GetMapping("/courses")
     public ResponseEntity<List<CourseAdminViewDTO>> getCourses(
-            @RequestParam(required = false) String status) {
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) Course.CourseType type) {
 
-        return ResponseEntity.ok(service.getAllCourses(status));
+        return ResponseEntity.ok(service.getAllCourses(status, type));
     }
 
     @PostMapping("/courses")

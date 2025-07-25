@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/lecture")
+@RequestMapping("/api/lecturer")
 @RequiredArgsConstructor
 public class LecturerController {
     @Autowired

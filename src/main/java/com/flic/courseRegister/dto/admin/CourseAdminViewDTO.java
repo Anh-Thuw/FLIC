@@ -11,11 +11,14 @@ import java.time.LocalDateTime;
 public class CourseAdminViewDTO {
     private Long id;
     private String title;
-    private String status;
-    private BigDecimal price;
+    private String description;
     private BigDecimal rating;
+    private BigDecimal price;
     private Integer duration;
+    private String status;
+    private String image;
     private String startMonth;
     private Course.CourseType type;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

@@ -1,20 +1,14 @@
-package com.flic.courseRegister.dto.admin;
+package com.flic.courseRegister.dto.user;
 
-import lombok.Builder;
 import lombok.Data;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
-@Builder
-public class UserAdminViewDTO {
-    private Long id;
-    private String email;
+public class UserUpdateDTO {
     private String fullName;
     private String phone;
     private String role;
-    private String status;
+    private String status;      // "active", "inactive", "blocked"
     private String studentId;
     private String gender;
     private String job;
@@ -26,5 +20,4 @@ public class UserAdminViewDTO {
     private String idIssuedPlace;
     private String schoolName;
     private String avatarUrl;
-    private LocalDateTime createdAt;
 }

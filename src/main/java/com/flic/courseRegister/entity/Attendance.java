@@ -32,6 +32,23 @@ public class Attendance {
     @Column(name = "checked_at")
     private LocalDateTime checkedAt;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
     public enum Status {
         PRESENT, ABSENT, LATE, EXCUSED
     }

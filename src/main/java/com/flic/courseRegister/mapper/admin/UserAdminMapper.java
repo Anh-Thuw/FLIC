@@ -14,6 +14,17 @@ public class UserAdminMapper {
                 .phone(user.getPhone())
                 .role(user.getRole())
                 .status(user.getStatus())
+                .studentId(user.getStudentId())
+                .gender(user.getGender())
+                .job(user.getJob())
+                .birthDate(user.getBirthDate())
+                .birthPlace(user.getBirthPlace())
+                .ethnicity(user.getEthnicity())
+                .idNumber(user.getIdNumber())
+                .idIssuedDate(user.getIdIssuedDate())
+                .idIssuedPlace(user.getIdIssuedPlace())
+                .schoolName(user.getSchoolName())
+                .avatarUrl(user.getAvatarUrl())
                 .createdAt(user.getCreatedAt())
                 .build();
     }

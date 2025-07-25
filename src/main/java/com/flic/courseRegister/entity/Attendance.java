@@ -50,7 +50,7 @@ public class Attendance {
     }
 
     public enum Status {
-        PRESENT, ABSENT, LATE, EXCUSED
+        present, absent, late, excused
     }
 }
 

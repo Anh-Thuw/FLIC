@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class ExamPackageImpl implements ExamPackageService {
+public class ExamPackageServiceImpl implements ExamPackageService {
 
     private final ExamPackageRepository examPackageRepo;
 

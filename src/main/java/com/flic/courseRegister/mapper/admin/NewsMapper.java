@@ -1,19 +1,38 @@
 package com.flic.courseRegister.mapper.admin;
-
 import com.flic.courseRegister.dto.admin.NewsDTO;
 import com.flic.courseRegister.entity.NewsArticle;
+import com.flic.courseRegister.entity.User;
+import com.flic.courseRegister.repository.NewsRepository;
+import com.flic.courseRegister.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class NewsMapper {
-    public static NewsDTO toDto(NewsArticle news) {
-        if (news == null) return null;
+    private final NewsRepository newsRepos;
+
+    public static NewsDTO toDto(NewsArticle entity) {
+        if (entity == null) return null;
         return NewsDTO.builder()
-                .id(news.getId())
-                .title(news.getTitle())
-                .content(news.getContent())
-                .publishedAt(news.getPublishedAt())
-                .avatarUrl(news.getAvatarUrl())
-                .userId(news.getUser().getId())
+                .id(entity.getId())
+                .title(entity.getTitle())
+                .content(entity.getContent())
+                .publishedAt(entity.getPublishedAt())
+                .avatarUrl(entity.getAvatarUrl())
+                .userId(entity.getUser().getId())
                 .build();
 
+    }
+    public NewsArticle toEntity(NewsDTO dto) {
+        if (dto == null) return null;
+
+        return NewsArticle.builder()
+                .id(dto.getId())
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .publishedAt(dto.getPublishedAt())
+                .avatarUrl(dto.getAvatarUrl())
+                .createdAt(dto.getCreatedAt())
+                .updatedAt(dto.getUpdatedAt())
+                .build();
     }
 }

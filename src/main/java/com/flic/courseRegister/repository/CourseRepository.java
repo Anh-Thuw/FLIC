@@ -7,8 +7,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+
 import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, Long> {
+
+    List<Course> findAllById(Iterable<Long> ids);
+
+
+
+    // Tìm theo status
     // Basic filters
     List<Course> findByStatus(String status);
     List<Course> findByType(Course.CourseType type);
@@ -35,4 +42,5 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
                                  @Param("type") Course.CourseType type,
                                  @Param("startMonth") String startMonth);
 }
+
 

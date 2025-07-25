@@ -1,6 +1,8 @@
-package com.flic.courseRegister.mapper;
+package com.flic.courseRegister.mapper.admin;
 
-import com.flic.courseRegister.dto.CourseAdminViewDTO;
+import com.flic.courseRegister.dto.admin.CourseAdminViewDTO;
+import com.flic.courseRegister.dto.admin.CourseCreateDTO;
+import com.flic.courseRegister.dto.admin.CourseUpdateDTO;
 import com.flic.courseRegister.entity.Course;
 import org.springframework.stereotype.Component;
 
@@ -14,3 +16,4 @@ public class CourseAdminMapper {
                 .build();
     }
 }
+

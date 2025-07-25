@@ -1,4 +1,4 @@
-package com.flic.courseRegister.dto;
+package com.flic.courseRegister.dto.admin;
 
 import lombok.Builder;
 import lombok.Data;

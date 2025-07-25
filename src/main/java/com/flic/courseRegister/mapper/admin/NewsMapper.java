@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 public class NewsMapper {
     private final NewsRepository newsRepos;
 
+    //Chuyển dữ liệu khi nhận từ client
     public static NewsDTO toDto(NewsArticle entity) {
         if (entity == null) return null;
         return NewsDTO.builder()
@@ -18,13 +19,14 @@ public class NewsMapper {
                 .content(entity.getContent())
                 .publishedAt(entity.getPublishedAt())
                 .avatarUrl(entity.getAvatarUrl())
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
                 .userId(entity.getUser().getId())
                 .build();
 
     }
     public NewsArticle toEntity(NewsDTO dto) {
         if (dto == null) return null;
-
         return NewsArticle.builder()
                 .id(dto.getId())
                 .title(dto.getTitle())

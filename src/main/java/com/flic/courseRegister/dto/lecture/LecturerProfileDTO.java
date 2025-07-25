@@ -1,6 +1,5 @@
 package com.flic.courseRegister.dto.lecture;
 
-import com.flic.courseRegister.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder  // Cần cái này để dùng builder()
-public class LecturerViewDTO {
+public class LecturerProfileDTO {
     private Long id;
-    private User user;
+    private String email;
     private String profileImage;
     private String degree;
     private String specialization;

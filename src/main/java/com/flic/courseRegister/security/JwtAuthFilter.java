@@ -60,7 +60,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                     // Đưa user đã xác thực và role vào SecurityContextHolder
                     UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(user, null, authorities);
+                            new UsernamePasswordAuthenticationToken(email, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                     System.out.println(" User authenticated!");
                 }

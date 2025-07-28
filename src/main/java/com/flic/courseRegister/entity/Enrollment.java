@@ -3,6 +3,7 @@ package com.flic.courseRegister.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,8 +24,11 @@ public class Enrollment {
     @Column(name = "course_id")
     private Long courseId;
 
-    @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private EnrollmentStatus status;
+
+    @Column(precision = 5, scale = 2)
+    private BigDecimal progress;
 
     @Column(name = "enrolled_at")
     private LocalDateTime enrolledAt;

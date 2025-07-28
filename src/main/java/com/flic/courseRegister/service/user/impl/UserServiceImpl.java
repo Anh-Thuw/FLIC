@@ -20,16 +20,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserViewDTO register(UserRegisterRequestDTO dto) {
+        System.out.println("[DEBUG] DTO nhận từ client: " + dto);
+
         if(userRepo.findByEmail(dto.getEmail()).isPresent()) {
             throw new RuntimeException("Email already exists");
         }
 
         User user = mapper.toEntity(dto);
+        System.out.println("[DEBUG] Entity sau khi map từ DTO: " + user);
 
         user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
         user.setRole("USER");
 
-        return mapper.toDto(userRepo.save(user));
+        User savedUser = userRepo.save(user);
+        System.out.println("[DEBUG] User sau khi save vào DB: " + savedUser);
+
+        UserViewDTO result = mapper.toDto(savedUser);
+        System.out.println("[DEBUG] DTO trả về client: " + result);
+
+        return result;
     }
+
 }
 

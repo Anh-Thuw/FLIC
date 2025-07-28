@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +26,9 @@ public class NewsController {
     }
 
     @PostMapping
-    public ResponseEntity<NewsDTO> createNews(@RequestBody NewsDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(newsService.createNews(dto));
+    public ResponseEntity<NewsDTO> createNews(@RequestBody NewsDTO dto , Authentication authentication) {
+        String email = authentication.getName();
+        return ResponseEntity.status(HttpStatus.CREATED).body(newsService.createNews(dto , email));
     }
     @PutMapping("/{id}")
     public ResponseEntity<NewsDTO> updateNews(@PathVariable Long id, @RequestBody NewsDTO dto) {

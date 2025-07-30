@@ -1,9 +1,7 @@
 package com.flic.courseRegister.service.user.impl;
 
-import com.flic.courseRegister.dto.user.AttachmentDTO;
-import com.flic.courseRegister.dto.user.UserProfileDTO;
-import com.flic.courseRegister.dto.user.UserRegisterRequestDTO;
-import com.flic.courseRegister.dto.user.UserViewDTO;
+import com.flic.courseRegister.dto.user.*;
+import com.flic.courseRegister.entity.AttachmentType;
 import com.flic.courseRegister.entity.User;
 import com.flic.courseRegister.entity.UserAttachment;
 import com.flic.courseRegister.exception.ResourceNotFoundException;
@@ -54,11 +52,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserProfileDTO getUserProfile() {
         // Lấy email từ JWT
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("auth: " + auth);
-        String email = auth.getName();
-        System.out.println("[DEBUG] email class = " + email.getClass());
-        System.out.println("[DEBUG] email = " + email);
+        String email = getCurrentEmail();
 
         // Tìm user theo email
         User user = userRepository.findByEmail(email)
@@ -85,6 +79,38 @@ public class UserServiceImpl implements UserService {
         return dto;
     }
 
+    @Override
+    public void updateUserProfile(UserProfileUpdateRequestDTO dto) {
+        String email = getCurrentEmail();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng với email: " + email));
+        mapper.updateUserFromDto(dto, user);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateAttachment(AttachmentUpdateDTO dto) {
+        String email = getCurrentEmail();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng với email: " + email));
+
+        AttachmentType type = AttachmentType.valueOf(dto.getType());
+        UserAttachment attachment = userAttachmentRepository
+                .findByUserIdAndType(user.getId(), type)
+                .orElse(UserAttachment.builder()
+                        .user(user)
+                        .build());
+
+        attachment.setFilePath(dto.getFilePath());
+        attachment.setUploadedAt(dto.getUploadedAt());
+        userAttachmentRepository.save(attachment);
+    }
+
+    private String getCurrentEmail() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getName();
+    }
 
 }
 

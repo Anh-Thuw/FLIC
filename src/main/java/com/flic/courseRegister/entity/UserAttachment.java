@@ -26,7 +26,6 @@ public class UserAttachment {
     @Column(name = "type")
     private AttachmentType type;
 
-
     @Column(name = "file_path")
     private String filePath;
 

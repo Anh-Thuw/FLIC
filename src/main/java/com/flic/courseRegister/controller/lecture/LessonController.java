@@ -1,6 +1,7 @@
 package com.flic.courseRegister.controller.lecture;
 
 import com.flic.courseRegister.dto.lecture.LessonCreateDTO;
+import com.flic.courseRegister.dto.lecture.LessonUpdateDTO;
 import com.flic.courseRegister.dto.lecture.LessonViewDTO;
 import com.flic.courseRegister.service.lecture.LessonService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,22 @@ public class LessonController {
             e.printStackTrace();
             response.put("message", "Tạo buổi học thất bại");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    @PostMapping("/update")
+    public ResponseEntity<Map<String, Object>> updateLesson(@RequestBody LessonUpdateDTO dto, Authentication authentication){
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String email = authentication.getName();
+            LessonUpdateDTO result = lessonService.updateLesson(dto,email);
+            response.put("message", "Cập nhật buổi học thành công");
+            response.put("data", result);
+            return ResponseEntity.ok(response);
+        } catch (Exception e){
+            e.printStackTrace();
+            response.put("message","Cập nhật buổi học thất bại");
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
 }

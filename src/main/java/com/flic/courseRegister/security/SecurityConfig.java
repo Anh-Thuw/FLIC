@@ -66,7 +66,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/login",  "/api/register").permitAll()
-                        .requestMatchers("/api/lesson/create").hasRole("INSTRUCTOR")
+                        .requestMatchers("/api/lesson/create", "/api/lesson/update").hasRole("INSTRUCTOR")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

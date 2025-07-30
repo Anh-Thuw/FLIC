@@ -33,6 +33,7 @@ public class LessonController {
             response.put("data", result);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            e.printStackTrace();
             response.put("message", "Tạo buổi học thất bại");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }

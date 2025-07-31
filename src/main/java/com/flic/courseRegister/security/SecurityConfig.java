@@ -18,7 +18,7 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 @EnableMethodSecurity
-public class SecurityConfig {
+public class    SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
 

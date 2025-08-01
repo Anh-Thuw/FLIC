@@ -1,6 +1,7 @@
 package com.flic.courseRegister.service.lecture.impl;
 
 import com.flic.courseRegister.dto.lecture.LessonCreateDTO;
+import com.flic.courseRegister.dto.lecture.LessonUpdateDTO;
 import com.flic.courseRegister.dto.lecture.LessonViewDTO;
 import com.flic.courseRegister.entity.*;
 import com.flic.courseRegister.mapper.lecture.LessonMapper;
@@ -20,6 +21,7 @@ public class LessonServiceImpl implements LessonService {
     private final EnrollmentRepository enrollmentRepository;
     private final AttendanceRepository attendanceRepository;
     private final LessonMapper lessonMapper;
+    private final LessonRevisionRepository lessonRevisionRepository;
     @Override
     public LessonViewDTO createLesson(LessonCreateDTO lessonCreateDTO, String email) {
         Course course = courseRepository.findById(lessonCreateDTO.getCourseId())
@@ -38,5 +40,23 @@ public class LessonServiceImpl implements LessonService {
                         .build()).toList();
         attendanceRepository.saveAll(attendanceList);
         return lessonMapper.toDto(newLesson);
+    }
+
+    @Override
+    public LessonUpdateDTO updateLesson(LessonUpdateDTO lessonUpdateDTO, String email) {
+        Lesson lesson = lessonRepository.findById(lessonUpdateDTO.getLessonId())
+                .orElseThrow(()-> new RuntimeException("Không tìm thấy buổi học"));
+
+        User editor = userRepository.findByEmail(email)
+                .orElseThrow(()-> new RuntimeException("Không thấy giảng viên"));
+        if (lesson.getCreatorId() == null) {
+            throw new RuntimeException("Buổi học chưa có người tạo (creatorId bị null)");
+        }
+        if(!lesson.getCreatorId().getId().equals(editor.getId())){
+            throw new RuntimeException("Không có quyền truy cập buổi học này");
+        }
+        LessonRevision revision = lessonMapper.updateEntity(lesson, lessonUpdateDTO, editor);
+        lessonRevisionRepository.save(revision);
+        return lessonMapper.toEntityRevision(revision);
     }
 }

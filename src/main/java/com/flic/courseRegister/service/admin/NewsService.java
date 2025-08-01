@@ -5,8 +5,8 @@ import com.flic.courseRegister.dto.admin.NewsDTO;
 import java.util.List;
 
 public interface NewsService {
-    List<NewsDTO> getAllNews();
-    NewsDTO createNews(NewsDTO newsDTO);
-    NewsDTO updateNews(Long id, NewsDTO newsDTO);
-    void deleteNews(Long id);
+    List<NewsDTO>   getAllNews();
+    NewsDTO         createNews(NewsDTO newsDTO, String userEmail);
+    NewsDTO         updateNews(Long id, NewsDTO newsDTO, String userEmail);
+    void            deleteNews(Long id);
 }

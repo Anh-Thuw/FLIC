@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Builder
 public class NewsDTO {
     private Long id;
-    private Long userId;
     private String title;
     private String content;
     private LocalDateTime publishedAt;

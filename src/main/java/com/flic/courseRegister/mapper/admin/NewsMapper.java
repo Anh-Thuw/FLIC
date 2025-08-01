@@ -1,7 +1,11 @@
 package com.flic.courseRegister.mapper.admin;
 
 import com.flic.courseRegister.dto.admin.NewsDTO;
+import com.flic.courseRegister.dto.lecture.LessonUpdateDTO;
+import com.flic.courseRegister.entity.Lesson;
+import com.flic.courseRegister.entity.LessonRevision;
 import com.flic.courseRegister.entity.NewsArticle;
+import com.flic.courseRegister.entity.User;
 import com.flic.courseRegister.repository.NewsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -36,5 +40,25 @@ public class NewsMapper {
                 .createdAt(dto.getCreatedAt())
                 .updatedAt(dto.getUpdatedAt())
                 .build();
+    }
+    public void updateNews( NewsDTO dto , NewsArticle entity , User user  ) {
+        if (dto == null || entity == null) {
+            return;
+        }
+        if (dto.getTitle() != null) {
+            entity.setTitle(dto.getTitle());
+        }
+        if (dto.getContent() != null) {
+            entity.setContent(dto.getContent());
+        }
+        if (dto.getPublishedAt() != null) {
+            entity.setPublishedAt(dto.getPublishedAt());
+        }
+        if (dto.getAvatarUrl() != null) {
+            entity.setAvatarUrl(dto.getAvatarUrl());
+        }
+        if (user != null) {
+            entity.setUser(user);
+        }
     }
 }

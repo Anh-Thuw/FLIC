@@ -67,4 +67,10 @@ public class LessonController {
         List<LessonMaterialViewDTO> materials = lessonMaterialService.getMaterialByLesson(lessonId);
         return ResponseEntity.ok(materials);
     }
+
+    @GetMapping()
+    public ResponseEntity<?> getLessonByCourseId(@RequestParam Long courseId){
+        List<LessonViewDTO> lesson = lessonService.getLessonByCourseId(courseId);
+        return ResponseEntity.ok(lesson);
+    }
 }

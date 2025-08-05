@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -58,5 +61,13 @@ public class LessonServiceImpl implements LessonService {
         LessonRevision revision = lessonMapper.updateEntity(lesson, lessonUpdateDTO, editor);
         lessonRevisionRepository.save(revision);
         return lessonMapper.toEntityRevision(revision);
+    }
+
+    @Override
+    public List<LessonViewDTO> getLessonByCourseId(Long courseId) {
+        return lessonRepository.findByCourseId(courseId)
+                .stream()
+                .map(lessonMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

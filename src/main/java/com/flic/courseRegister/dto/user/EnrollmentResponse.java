@@ -1,11 +1,16 @@
 package com.flic.courseRegister.dto.user;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class EnrollmentResponse {
-    private Long id;
-    private Long userId;
-    private Long courseId;
-    private String status;
+    private Long id;          // id của enrollment
+    private Long userId;      // id user đăng ký
+    private Long courseId;    // id khóa học
+    private Long enrollmentId; // ⬅ bổ sung
+    private Long paymentId;    // ⬅ bổ sung
+    private String enrollmentStatus;  // trạng thái enrollment, ví dụ "PENDING", "CONFIRMED", "CANCELLED"
+    private String paymentStatus;     // trạng thái thanh toán, ví dụ "pending", "completed", "failed"
 }

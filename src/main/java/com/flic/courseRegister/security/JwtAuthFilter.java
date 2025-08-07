@@ -31,6 +31,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        final String path = request.getRequestURI();
+        System.out.println("Request URI: " + path);
+
+        // Danh sách các đường dẫn public không cần xác thực JWT
+        if (path.startsWith("/api/public/enroll") ||
+                path.startsWith("/api/enrollments") ||
+                path.equals("/api/login") ||
+                path.equals("/api/register")) {
+            // Bỏ qua filter JWT
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String authHeader = request.getHeader("Authorization");
         System.out.println(" Authorization Header: " + authHeader);
 
@@ -59,9 +72,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     System.out.println("Authorities set: " + authorities);
 
                     // Đưa user đã xác thực và role vào SecurityContextHolder
-//                    UsernamePasswordAuthenticationToken authToken =
-//                            new UsernamePasswordAuthenticationToken(email, null, authorities);
-//                    SecurityContextHolder.getContext().setAuthentication(authToken);
                     UserDetailsImpl userDetails = new UserDetailsImpl(user);
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

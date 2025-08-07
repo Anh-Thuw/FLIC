@@ -33,6 +33,9 @@ public class Payment {
     @Column(name = "paid_at")
     private LocalDateTime paidAt;
 
+    @Column(name ="note_payment")
+    private String notePayment;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

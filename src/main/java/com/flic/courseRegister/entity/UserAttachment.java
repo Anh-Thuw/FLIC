@@ -22,7 +22,7 @@ public class UserAttachment {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = AttachmentTypeConverter.class)
     @Column(name = "type")
     private AttachmentType type;
 
@@ -31,12 +31,6 @@ public class UserAttachment {
 
     @Column(name = "uploaded_at")
     private LocalDateTime uploadedAt;
-
-    public enum AttachmentType {
-        @JsonProperty("4x6_photo") _4x6_photo,
-        @JsonProperty("3x4_photo") _3x4_photo,
-        @JsonProperty("birth_certificate") birth_certificate
-    }
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

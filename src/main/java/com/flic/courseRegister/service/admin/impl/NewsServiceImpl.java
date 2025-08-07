@@ -4,8 +4,6 @@ import com.flic.courseRegister.dto.admin.NewsDTO;
 import com.flic.courseRegister.entity.NewsArticle;
 import com.flic.courseRegister.entity.User;
 import com.flic.courseRegister.mapper.admin.NewsMapper;
-import com.flic.courseRegister.mapper.admin.UserAdminMapper;
-import com.flic.courseRegister.mapper.user.UserMapper;
 import com.flic.courseRegister.repository.NewsRepository;
 import com.flic.courseRegister.repository.UserRepository;
 import com.flic.courseRegister.service.admin.NewsService;
@@ -23,7 +21,6 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepository    newsRepos;
     private final NewsMapper        newsMapper ;
     private final UserRepository    userRepo;
-    private final UserService       userService ;
     private final LocalDateTime     now = LocalDateTime.now();
     @Override
     public List<NewsDTO> getAllNews() {
@@ -34,19 +31,13 @@ public class NewsServiceImpl implements NewsService {
     }
     //tao tin
     @Override
-    public NewsDTO createNews(NewsDTO newsDTO) {
-
-        newsDTO.setCreatedAt(now);
-        newsDTO.setUpdatedAt(now);
+    public NewsDTO createNews(NewsDTO newsDTO, String userEmail) {
+        User user = userRepo.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         NewsArticle article = newsMapper.toEntity(newsDTO);
-        // lay user created
-        Long userId = newsDTO.getUserId();
-        if (userId == null) {
-            throw new RuntimeException("Error user");
-        }
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Error user id : " + userId));
+        newsDTO.setCreatedAt(now);
+        newsDTO.setUpdatedAt(now);
         article.setUser(user);
 
         NewsArticle saved = newsRepos.save(article);
@@ -54,25 +45,14 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public NewsDTO updateNews(Long id, NewsDTO newsDTO) {
+    public NewsDTO updateNews(Long id, NewsDTO newsDTO, String userEmail) {
+        User user = userRepo.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         NewsArticle news = newsRepos.findById(id)
                 .orElseThrow(() -> new RuntimeException("NewsArticle not found with id: " + id));
 
-        // Cập nhật các trường cần thiết
-        news.setTitle(newsDTO.getTitle());
-        news.setContent(newsDTO.getContent());
-        news.setPublishedAt(newsDTO.getPublishedAt());
-        news.setAvatarUrl(newsDTO.getAvatarUrl());
-        news.setUpdatedAt(LocalDateTime.now());
-
-        // lay user updated
-        Long userId = newsDTO.getUserId();
-        if (userId != null) {
-            User user = userRepo.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
-            news.setUser(user);
-        }
-
+        newsMapper.updateNews(newsDTO, news, user);
         NewsArticle saved = newsRepos.save(news);
         return newsMapper.toDto(saved);
     }

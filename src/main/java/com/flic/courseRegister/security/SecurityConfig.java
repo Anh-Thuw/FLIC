@@ -18,7 +18,7 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 @EnableMethodSecurity
-public class SecurityConfig {
+public class    SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
 
@@ -65,7 +65,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // để frontend gọi được API
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/login",  "/api/register").permitAll()
+                        .requestMatchers("/api/login",  "/api/register","/api/course","/api/enrollments").permitAll()
+                        .requestMatchers("/api/lesson/create", "/api/lesson/update","/api/lecturer/assignments").hasRole("INSTRUCTOR")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

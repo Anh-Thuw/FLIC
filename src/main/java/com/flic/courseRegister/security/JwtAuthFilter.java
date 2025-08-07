@@ -59,9 +59,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     System.out.println("Authorities set: " + authorities);
 
                     // Đưa user đã xác thực và role vào SecurityContextHolder
+//                    UsernamePasswordAuthenticationToken authToken =
+//                            new UsernamePasswordAuthenticationToken(email, null, authorities);
+//                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    UserDetailsImpl userDetails = new UserDetailsImpl(user);
                     UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(user, null, authorities);
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+
                     System.out.println(" User authenticated!");
                 }
             }

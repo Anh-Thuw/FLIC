@@ -19,17 +19,30 @@ public class Lesson {
 
     private String title;
 
-    @Column(columnDefinition = "TEXT")
-    private String content;
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "video_url")
     private String videoUrl;
+
+
+    @Column(name ="week_index")
+    private Integer weekIndex;
+
+    @Column(name ="session_index")
+    private Integer sessionIndex;
 
     @Column(name = "order_index")
     private Integer orderIndex;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "planned_at")
+    private LocalDateTime plannedAt;
+
+    @Column(name = "is_flexible")
+    private boolean isFlexible;
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
@@ -53,6 +66,6 @@ public class Lesson {
     // Author / Creator
     @ManyToOne
     @JoinColumn(name = "creator_id", referencedColumnName = "id")
-    private User creator;
+    private User creatorId;
 }
 

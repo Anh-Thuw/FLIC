@@ -3,6 +3,7 @@ package com.flic.courseRegister.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,28 +18,25 @@ public class Enrollment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(name = "course_id")
-    private Long courseId;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
 
-    @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private EnrollmentStatus status;
+
+    @Column(precision = 5, scale = 2)
+    private BigDecimal progress;
 
     @Column(name = "enrolled_at")
     private LocalDateTime enrolledAt;
 
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "course_id", insertable = false, updatable = false)
-    private Course course;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -56,6 +54,4 @@ public class Enrollment {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
 }
-

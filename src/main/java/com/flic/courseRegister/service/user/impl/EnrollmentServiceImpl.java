@@ -102,6 +102,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .enrolmentId(enrollment.getId())  // gán id enrollment (Long)
                 .amount(req.getAmount())
                 .paymentMethod(req.getPaymentMethod())
+                .billImage(req.getBillImage())
+                .notePayment(req.getNote())
                 .paymentStatus(req.getPaymentStatus() != null ? req.getPaymentStatus() : "pending")
                 .paidAt(req.getPaidAt() != null ? LocalDateTime.parse(req.getPaidAt()) : null)
                 .createdAt(LocalDateTime.now())

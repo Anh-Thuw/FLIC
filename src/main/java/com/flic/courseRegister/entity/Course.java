@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "courses")
@@ -47,6 +48,10 @@ public class Course {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    private List<CourseInstructor> instructors;
+
 
     @PrePersist
     protected void onCreate() {

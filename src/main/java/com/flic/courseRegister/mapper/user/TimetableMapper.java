@@ -38,12 +38,22 @@ public interface TimetableMapper {
 
     @Named("mapStartTime")
     default String mapStartTime(int sessionIndex) {
-        return sessionIndex == 1 ? "07:30" : "13:30";
+        return switch (sessionIndex) {
+            case 1 -> "07:30";   // Buổi sáng
+            case 2 -> "13:30";   // Buổi chiều
+            case 3 -> "18:00";   // Buổi tối
+            default -> "Không rõ";
+        };
     }
 
     @Named("mapEndTime")
     default String mapEndTime(int sessionIndex) {
-        return sessionIndex == 1 ? "11:00" : "17:00";
+        return switch (sessionIndex) {
+            case 1 -> "11:00";   // Buổi sáng
+            case 2 -> "17:00";   // Buổi chiều
+            case 3 -> "21:00";   // Buổi tối
+            default -> "Không rõ";
+        };
     }
 
 }

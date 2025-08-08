@@ -27,7 +27,7 @@ public class UserCreateDTO {
     private String fullName;
 
     private String phone;
-    private String role;        // "admin", "student"
+    private String role;
     private String studentId;
     private String gender;      // "male", "female", "other"
     private String job;

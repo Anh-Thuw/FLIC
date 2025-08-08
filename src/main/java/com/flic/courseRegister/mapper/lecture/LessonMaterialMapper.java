@@ -14,6 +14,7 @@ public class LessonMaterialMapper {
                 .lesson(lesson)
                 .revision(revision)
                 .title(dto.getTitle())
+                .type(dto.getType())
                 .fileUrl(dto.getFileUrl())
                 .build();
     }
@@ -21,6 +22,7 @@ public class LessonMaterialMapper {
         return LessonMaterialViewDTO.builder()
                 .id(material.getId())
                 .title(material.getTitle())
+                .type(material.getType())
                 .fileUrl(material.getFileUrl())
                 .uploadedAt(material.getUploadedAt())
                 .build();

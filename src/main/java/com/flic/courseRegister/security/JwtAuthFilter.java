@@ -38,7 +38,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (path.startsWith("/api/public/enroll") ||
                 path.startsWith("/api/enrollments") ||
                 path.equals("/api/login") ||
-                path.equals("/api/register")) {
+                path.equals("/api/register") ||
+                path.equals("/api/public/user-info")) {
             // Bỏ qua filter JWT
             filterChain.doFilter(request, response);
             return;

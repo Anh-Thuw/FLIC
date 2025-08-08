@@ -26,5 +26,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                @Param("status") String status,
                                @Param("role") String role,
                                Pageable pageable);
+
+    Optional<User> findByIdNumber(String idNumber);
 }
 

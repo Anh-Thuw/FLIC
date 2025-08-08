@@ -36,6 +36,9 @@ public class Course {
     @Column(name = "start_month")
     private String startMonth;
 
+    @Column(name ="schedule")
+    private String schedule;
+
     @Enumerated(EnumType.STRING)
     private CourseType type; // ENUM('short_course', 'cert_exam')
 

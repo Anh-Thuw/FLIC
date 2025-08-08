@@ -30,6 +30,9 @@ public class Payment {
     @Column(name = "payment_status")
     private String paymentStatus;
 
+    @Column(name ="bill_image")
+    private String billImage;
+
     @Column(name = "paid_at")
     private LocalDateTime paidAt;
 

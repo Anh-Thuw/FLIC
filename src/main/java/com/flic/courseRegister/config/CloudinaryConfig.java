@@ -1,14 +1,13 @@
 package com.flic.courseRegister.config;
 
-
 import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class CloudinaryConfig {
+
     @Value("${cloudinary.cloud_name}")
     private String cloudName;
 
@@ -20,11 +19,14 @@ public class CloudinaryConfig {
 
     @Bean
     public Cloudinary cloudinary() {
-        return new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", cloudName,
-                "api_key", apiKey,
-                "api_secret", apiSecret,
-                "secure", true
-        ));
+        // Trim để tránh khoảng trắng/ký tự ẩn
+        String cn = cloudName.trim();
+        String ak = apiKey.trim();
+        String as = apiSecret.trim();
+
+        String url = String.format("cloudinary://%s:%s@%s", ak, as, cn);
+        System.out.println("[CloudinaryConfig] Using URL: " + url.replace(as, "****")); // ẩn secret khi log
+
+        return new Cloudinary(url);
     }
 }

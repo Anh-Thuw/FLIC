@@ -2,11 +2,8 @@ package com.flic.courseRegister.controller.admin;
 
 
 import com.flic.courseRegister.dto.admin.NewsDTO;
-import com.flic.courseRegister.dto.user.UserCreateDTO;
-import com.flic.courseRegister.dto.user.UserViewDTO;
 import com.flic.courseRegister.service.admin.NewsService;
 import com.flic.courseRegister.util.ApiResponse;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

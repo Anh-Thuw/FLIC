@@ -31,6 +31,9 @@ public class LessonMaterial {
     @Column(name = "file_url")
     private String fileUrl;
 
+    @Column(name ="type") //thêm loại tài liệu
+    private String type;
+
     @Column(name = "uploaded_at")
     private LocalDateTime uploadedAt;
 

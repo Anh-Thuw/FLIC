@@ -1,6 +1,9 @@
 package com.flic.courseRegister.dto.admin;
-import com.flic.courseRegister.entity.User;
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 

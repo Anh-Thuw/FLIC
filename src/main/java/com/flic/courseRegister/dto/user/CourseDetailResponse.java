@@ -15,6 +15,8 @@ public class CourseDetailResponse {
     private String status;
     private String imageUrl;
     private String startMonth;
+    private String schedule;
+    private String lecturerName;
     private String type;
 }
 

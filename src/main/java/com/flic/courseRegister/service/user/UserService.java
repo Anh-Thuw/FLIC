@@ -6,11 +6,13 @@ import java.util.List;
 
 public interface UserService {
 //    List<UserViewDTO> getAllUsers();
-//    UserViewDTO getUserById(Long id);
+    UserProfileDTO getUserById(Long id);
 //    UserViewDTO createUser(UserCreateDTO dto);
     UserViewDTO register(UserRegisterRequestDTO dto);
     UserProfileDTO getUserProfile();
     void updateUserProfile(UserProfileUpdateRequestDTO dto);       // Mới
     void updateAttachment(AttachmentUpdateDTO dto);
+
+    UserFormViewDTO getUserFormView();
 }
 

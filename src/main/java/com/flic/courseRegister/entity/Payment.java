@@ -18,20 +18,30 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "enrolment_id")
+    @Column(name = "enrollment_id")
     private Long enrolmentId;
 
     @Column(name = "amount")
     private BigDecimal amount;
 
-    @Column(name = "payment_method")
+    @Column(name = "method")
     private String paymentMethod;
 
-    @Column(name = "payment_status")
+    @Column(name = "status")
     private String paymentStatus;
+
+    @Column(name ="bill_image")
+    private String billImage;
 
     @Column(name = "paid_at")
     private LocalDateTime paidAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_for", columnDefinition = "ENUM('course', 'exam')")
+    private PaymentFor paymentFor;
+
+    @Column(name ="note")
+    private String notePayment;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -48,6 +58,11 @@ public class Payment {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+    // Enum cho payment_for
+    public enum PaymentFor {
+        course,
+        exam
     }
 }
 

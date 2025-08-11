@@ -2,12 +2,10 @@ package com.flic.courseRegister.repository;
 
 import com.flic.courseRegister.entity.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-    @Query("SELECT p FROM Payment p JOIN FETCH p.enrollment e JOIN FETCH e.user u")
-    List<Payment> findAllWithDependencies();
+    Optional<Payment> findByEnrolmentId(Long enrolmentId);
     // Optional: các method tuỳ chỉnh nếu cần
 }

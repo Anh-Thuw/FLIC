@@ -1,5 +1,7 @@
 package com.flic.courseRegister.dto.admin;
 
+import com.flic.courseRegister.dto.user.EnrollmentResponse;
+import com.flic.courseRegister.dto.user.UserProfileDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 public class PaymentDTO {
     private Long id;
+    private Long enrollmentId;
     private BigDecimal amount;
     private String method;
     private String billImage;
@@ -22,4 +25,7 @@ public class PaymentDTO {
     private String paymentFor; // hoặc Enum nếu bạn dùng PaymentFor enum
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    private EnrollmentResponse enrollment;
+    private UserProfileDTO student;
 }

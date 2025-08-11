@@ -12,5 +12,7 @@ public interface UserService {
     UserProfileDTO getUserProfile();
     void updateUserProfile(UserProfileUpdateRequestDTO dto);       // Mới
     void updateAttachment(AttachmentUpdateDTO dto);
+
+    UserFormViewDTO getUserFormView();
 }
 

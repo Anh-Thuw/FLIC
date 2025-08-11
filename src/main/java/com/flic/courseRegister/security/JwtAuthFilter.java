@@ -36,7 +36,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         // Danh sách các đường dẫn public không cần xác thực JWT
         if (path.startsWith("/api/public/enroll") ||
-                path.startsWith("/api/enrollments") ||
+//                path.startsWith("/api/enrollments") ||
                 path.equals("/api/login") ||
                 path.equals("/api/register")) {
             // Bỏ qua filter JWT

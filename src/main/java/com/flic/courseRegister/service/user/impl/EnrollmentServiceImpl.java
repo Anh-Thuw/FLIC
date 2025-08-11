@@ -12,6 +12,8 @@ import com.flic.courseRegister.repository.PaymentRepository;
 import com.flic.courseRegister.repository.UserRepository;
 import com.flic.courseRegister.service.user.EnrollmentService;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -42,12 +44,17 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     public EnrollmentResponse enroll(EnrollmentRequest request) {
-        if (enrollmentRepository.existsByUserIdAndCourseId(request.getUserId(), request.getCourseId())) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy user với email: " +email ));
+        System.out.println(">>> ID User: " + user.getId());
+        if (enrollmentRepository.existsByUserIdAndCourseId(user.getId(), request.getCourseId())) {
             throw new IllegalArgumentException("Bạn đã đăng ký khóa học này rồi");
         }
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy user với ID: " + request.getUserId()));
+
 
         Course course = courseRepository.findById(request.getCourseId())
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy khóa học với ID: " + request.getCourseId()));
@@ -60,7 +67,30 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .build();
 
         Enrollment saved = enrollmentRepository.save(enrollment);
-        return enrollmentMapper.toDto(saved);
+
+        Payment payment = Payment.builder()
+                .enrolmentId(enrollment.getId())  // gán id enrollment (Long)
+                .amount(request.getAmount())
+                .paymentMethod(request.getPaymentMethod())
+                .billImage(request.getBillImage())
+                .notePayment(request.getNote())
+                .paymentStatus(request.getPaymentStatus() != null ? request.getPaymentStatus() : "pending")
+                .paidAt(request.getPaidAt() != null ? LocalDateTime.parse(request.getPaidAt()) : null)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+
+        payment = paymentRepository.save(payment);
+
+        // 5. Trả về response
+        return EnrollmentResponse.builder()
+                .userId(user.getId())
+                .enrollmentId(enrollment.getId())
+                .paymentId(payment.getId())
+                .courseId(course.getId())
+                .build();
+//        return enrollmentMapper.toDto(saved);
     }
     @Override
     @Transactional
@@ -71,6 +101,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .fullName(req.getFullName())
                 .phone(req.getPhone())
                 .gender(req.getGender())
+                .studentId(req.getIdStudent())
                 .birthDate(req.getBirthDate() != null ? LocalDate.parse(req.getBirthDate()) : null)
                 .job(req.getJob())
                 .schoolName(req.getSchoolName())

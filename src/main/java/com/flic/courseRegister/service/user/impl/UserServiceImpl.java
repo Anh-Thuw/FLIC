@@ -27,6 +27,30 @@ public class UserServiceImpl implements UserService {
     private final UserAttachmentRepository  userAttachmentRepository;
 
     @Override
+    public UserProfileDTO getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng với id " + userId));
+
+        UserProfileDTO dto = mapper.toUserProfileDto(user);
+
+        // Lấy danh sách file đính kèm
+        userAttachmentRepository.findByUserId(user.getId()).forEach(att -> {
+            AttachmentDTO attDto = AttachmentDTO.builder()
+                    .type(att.getType().name())
+                    .filePath(att.getFilePath())
+                    .uploadedAt(att.getUploadedAt())
+                    .build();
+
+            switch (att.getType()) {
+                case _4x6_photo -> dto.set_4x6Photo(attDto);
+                case _3x4_photo -> dto.set_3x4Photo(attDto);
+                case birth_certificate -> dto.setBirthCertificate(attDto);
+            }
+        });
+        return dto;
+    }
+
+        @Override
     public UserViewDTO register(UserRegisterRequestDTO dto) {
         System.out.println("[DEBUG] DTO nhận từ client: " + dto);
 

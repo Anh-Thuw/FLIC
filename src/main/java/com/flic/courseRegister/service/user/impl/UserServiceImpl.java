@@ -107,6 +107,16 @@ public class UserServiceImpl implements UserService {
         userAttachmentRepository.save(attachment);
     }
 
+    @Override
+    public UserFormViewDTO getUserFormView() {
+        String email = getCurrentEmail();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy người dùng với email" + email));
+        UserFormViewDTO userForm = mapper.toUserFormViewDto(user);
+
+        return userForm;
+    }
+
     private String getCurrentEmail() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName();

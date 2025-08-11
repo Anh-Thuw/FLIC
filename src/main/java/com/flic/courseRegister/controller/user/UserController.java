@@ -1,6 +1,7 @@
 package com.flic.courseRegister.controller.user;
 
 import com.flic.courseRegister.dto.user.AttachmentUpdateDTO;
+import com.flic.courseRegister.dto.user.UserFormViewDTO;
 import com.flic.courseRegister.dto.user.UserProfileDTO;
 import com.flic.courseRegister.dto.user.UserProfileUpdateRequestDTO;
 import com.flic.courseRegister.service.user.UserService;
@@ -33,5 +34,9 @@ public class UserController {
         userService.updateAttachment(request);
     }
 
+    @GetMapping("/user-form")
+    public ResponseEntity<UserFormViewDTO> getUserForm(){
+        return  ResponseEntity.ok(userService.getUserFormView());
+    }
 }
 

@@ -4,6 +4,7 @@ import com.flic.courseRegister.dto.user.EnrollmentRequest;
 import com.flic.courseRegister.dto.user.EnrollmentResponse;
 import com.flic.courseRegister.service.user.EnrollmentService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

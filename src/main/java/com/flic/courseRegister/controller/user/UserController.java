@@ -40,6 +40,7 @@ public class UserController {
         userService.updateAttachment(request);
     }
 
+    // Cap nhat avt
     @PostMapping("/profile/avatar")
     public ResponseEntity<ImageUploadResult> uploadAvatar(@RequestParam("file") MultipartFile file) {
         try {

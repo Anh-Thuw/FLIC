@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "courses")
@@ -36,6 +37,9 @@ public class Course {
     @Column(name = "start_month")
     private String startMonth;
 
+    @Column(name ="schedule")
+    private String schedule;
+
     @Enumerated(EnumType.STRING)
     private CourseType type; // ENUM('short_course', 'cert_exam')
 
@@ -44,6 +48,10 @@ public class Course {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    private List<CourseInstructor> instructors;
+
 
     @PrePersist
     protected void onCreate() {

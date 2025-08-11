@@ -15,5 +15,6 @@ public class LessonMaterialViewDTO {
     private Long id;
     private String title;
     private String fileUrl;
+    private String type;
     private LocalDateTime uploadedAt;
 }

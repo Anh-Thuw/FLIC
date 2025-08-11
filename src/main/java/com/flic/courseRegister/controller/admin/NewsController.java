@@ -62,4 +62,17 @@ public class NewsController {
         }
     }
 
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<NewsDTO>> detailNews(@PathVariable Long id) {
+        try {
+            NewsDTO newsDTO = newsService.detailNews(id);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Lấy chi tiết bài viết thành công", newsDTO));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Không tìm thấy bài viết với id: " + id, null));
+        }
+    }
+
+
 }

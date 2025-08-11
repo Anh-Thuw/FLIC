@@ -19,7 +19,8 @@ public class EnrollmentController {
 
     @PostMapping
     public ResponseEntity<EnrollmentResponse> enroll(@RequestBody EnrollmentRequest request) {
-        EnrollmentResponse response = enrollmentService.enroll(request);
-        return ResponseEntity.ok(response);
+            EnrollmentResponse response = enrollmentService.enroll(request);
+            return ResponseEntity.ok(response);
+        }
     }
-}
+

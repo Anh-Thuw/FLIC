@@ -13,6 +13,7 @@ public class CourseResponse {
     private Long id;
     private String title;
     private BigDecimal rating;
+    private String description;
     private BigDecimal price;
     private String status;
     private String imageUrl;

@@ -49,6 +49,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy user với email: " +email ));
+        System.out.println(">>> ID User: " + user.getId());
         if (enrollmentRepository.existsByUserIdAndCourseId(user.getId(), request.getCourseId())) {
             throw new IllegalArgumentException("Bạn đã đăng ký khóa học này rồi");
         }

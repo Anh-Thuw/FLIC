@@ -13,6 +13,7 @@ public class PublicEnrollmentRequest {
     private String gender;
     private String birthDate; // Định dạng yyyy-MM-dd
     private String job;
+    private String idStudent;
     private String schoolName;
     private String idNumber;     // CCCD
     private String idIssuedPlace;

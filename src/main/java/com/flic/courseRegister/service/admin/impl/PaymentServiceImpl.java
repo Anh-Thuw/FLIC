@@ -4,8 +4,11 @@ import com.flic.courseRegister.dto.admin.CourseAdminViewDTO;
 import com.flic.courseRegister.dto.admin.PaymentDTO;
 import com.flic.courseRegister.dto.user.EnrollmentResponse;
 import com.flic.courseRegister.dto.user.UserProfileDTO;
+import com.flic.courseRegister.entity.Payment;
+import com.flic.courseRegister.entity.User;
 import com.flic.courseRegister.mapper.admin.PaymentMapper;
 import com.flic.courseRegister.repository.PaymentRepository;
+import com.flic.courseRegister.repository.UserRepository;
 import com.flic.courseRegister.service.admin.AdminService;
 import com.flic.courseRegister.service.admin.EnrollmentAdminService;
 import com.flic.courseRegister.service.admin.PaymentService;
@@ -13,6 +16,7 @@ import com.flic.courseRegister.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +28,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentMapper             paymentMapper;
     private final EnrollmentAdminService    enrollmentAdminService;
     private final UserService               userService;
-    private final AdminService courseService;
+    private final UserRepository            userRepo;
+    private final AdminService              courseService;
 
     @Override
     public List<PaymentDTO> getAllPayments() {
@@ -34,7 +39,6 @@ public class PaymentServiceImpl implements PaymentService {
                     // Map entity -> DTO
                     PaymentDTO dto = paymentMapper.toDto(payment);
 
-                    // Lấy enrollment info từ enrolmentId
                     if (payment.getEnrolmentId() != null) {
                         EnrollmentResponse enrollmentInfo = enrollmentAdminService.getEnrollmentById(payment.getEnrolmentId());
                         dto.setEnrollment(enrollmentInfo);
@@ -55,4 +59,20 @@ public class PaymentServiceImpl implements PaymentService {
                 })
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public PaymentDTO updateStatus(Long id, PaymentDTO dto) {
+        Payment payment = paymentRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Payment not found with id: " + id));
+        if (dto.getStatus() != null) {
+            payment.setPaymentStatus(dto.getStatus());
+        }
+        payment.setUpdatedAt(LocalDateTime.now());
+
+        Payment saved = paymentRepo.save(payment);
+
+        return paymentMapper.toDto(saved);
+    }
+
+
 }

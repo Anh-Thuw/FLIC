@@ -21,6 +21,7 @@ public class CourseMapper {
         dto.setId(course.getId());
         dto.setTitle(course.getTitle());
         dto.setRating(course.getRating());
+        dto.setDescription(course.getDescription());
         dto.setPrice(course.getPrice());
         dto.setStatus(course.getStatus());
         dto.setImageUrl(course.getImage());
@@ -44,6 +45,7 @@ public class CourseMapper {
         dto.setTitle(course.getTitle());
         dto.setDescription(course.getDescription());
         dto.setRating(course.getRating());
+        dto.setDescription(course.getDescription());
         dto.setPrice(course.getPrice());
         dto.setDuration(course.getDuration());
         dto.setStatus(course.getStatus());

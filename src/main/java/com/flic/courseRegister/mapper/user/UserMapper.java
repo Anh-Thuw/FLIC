@@ -11,6 +11,8 @@ public interface UserMapper {
     UserViewDTO toUserViewDto(User user);
     UserProfileDTO toUserProfileDto(User user);
 
+    UserFormViewDTO toUserFormViewDto(User user);
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateUserFromDto(UserProfileUpdateRequestDTO dto, @MappingTarget User user);
 

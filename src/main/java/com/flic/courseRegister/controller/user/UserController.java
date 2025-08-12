@@ -2,6 +2,7 @@ package com.flic.courseRegister.controller.user;
 
 import com.flic.courseRegister.dto.ImageUploadResult;
 import com.flic.courseRegister.dto.user.AttachmentUpdateDTO;
+import com.flic.courseRegister.dto.user.UserFormViewDTO;
 import com.flic.courseRegister.dto.user.UserProfileDTO;
 import com.flic.courseRegister.dto.user.UserProfileUpdateRequestDTO;
 import com.flic.courseRegister.security.UserDetailsImpl;
@@ -40,9 +41,14 @@ public class UserController {
         userService.updateAttachment(request);
     }
 
+    @GetMapping("/user-form")
+    public ResponseEntity<UserFormViewDTO> getUserForm() {
+        return ResponseEntity.ok(userService.getUserFormView());
+    }
+
     // Cap nhat avt
     @PostMapping("/profile/avatar")
-    public ResponseEntity<ImageUploadResult> uploadAvatar(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<ImageUploadResult> uploadAvatar (@RequestParam("file") MultipartFile file){
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             var userDetails = (UserDetailsImpl) auth.getPrincipal();

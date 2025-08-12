@@ -1,12 +1,15 @@
 package com.flic.courseRegister.controller.admin;
 
+import com.flic.courseRegister.dto.admin.NewsDTO;
 import com.flic.courseRegister.dto.admin.PaymentDTO;
 import com.flic.courseRegister.service.admin.PaymentService;
+import com.flic.courseRegister.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -22,4 +25,24 @@ public class PaymentController {
         List<PaymentDTO> payments = paymentService.getAllPayments();
         return ResponseEntity.ok(payments);
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<PaymentDTO>> updatePayment(@PathVariable Long id,@RequestBody PaymentDTO dto) {
+        try {
+            PaymentDTO updated = paymentService.updateStatus(id, dto);
+            ApiResponse<PaymentDTO> response = new ApiResponse<>(
+                    true,
+                    "Cập nhật thanh toán thành công",
+                    updated
+            );
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException ex) {
+            ApiResponse<PaymentDTO> response = new ApiResponse<>(
+                    false,
+                    "Cập nhật thanh toán thất bại: " + ex.getMessage(),
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
 }

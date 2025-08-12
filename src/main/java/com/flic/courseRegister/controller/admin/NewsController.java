@@ -2,11 +2,8 @@ package com.flic.courseRegister.controller.admin;
 
 
 import com.flic.courseRegister.dto.admin.NewsDTO;
-import com.flic.courseRegister.dto.user.UserCreateDTO;
-import com.flic.courseRegister.dto.user.UserViewDTO;
 import com.flic.courseRegister.service.admin.NewsService;
 import com.flic.courseRegister.util.ApiResponse;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -64,5 +61,18 @@ public class NewsController {
                     .body(new ApiResponse<>(false, "Xóa thất bại: " + ex.getMessage(), null));
         }
     }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<NewsDTO>> detailNews(@PathVariable Long id) {
+        try {
+            NewsDTO newsDTO = newsService.detailNews(id);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Lấy chi tiết bài viết thành công", newsDTO));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Không tìm thấy bài viết với id: " + id, null));
+        }
+    }
+
 
 }

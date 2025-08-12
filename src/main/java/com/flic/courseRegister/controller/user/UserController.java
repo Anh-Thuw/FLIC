@@ -46,6 +46,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserFormView());
     }
 
+    // Cap nhat avt
     @PostMapping("/profile/avatar")
     public ResponseEntity<ImageUploadResult> uploadAvatar (@RequestParam("file") MultipartFile file){
         try {

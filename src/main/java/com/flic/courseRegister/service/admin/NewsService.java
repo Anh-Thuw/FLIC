@@ -9,4 +9,5 @@ public interface NewsService {
     NewsDTO         createNews(NewsDTO newsDTO, String userEmail);
     NewsDTO         updateNews(Long id, NewsDTO newsDTO, String userEmail);
     void            deleteNews(Long id);
+    NewsDTO         detailNews(Long id);
 }

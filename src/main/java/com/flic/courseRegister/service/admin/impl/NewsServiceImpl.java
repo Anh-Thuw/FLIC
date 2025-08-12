@@ -64,4 +64,11 @@ public class NewsServiceImpl implements NewsService {
         }
         newsRepos.deleteById(id);
     }
+
+    @Override
+    public NewsDTO detailNews(Long id) {
+        NewsArticle news = newsRepos.findById(id)
+                .orElseThrow(() -> new RuntimeException("NewsArticle not found with id: " + id));
+        return newsMapper.toDto(news);     }
+
 }

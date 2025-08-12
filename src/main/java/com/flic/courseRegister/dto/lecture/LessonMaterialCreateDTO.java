@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class LessonMaterialCreateDTO {
-    private Long lessonId;
+    private Long courseId;
     private Long revisionId; // có thể null nếu chưa có revision
     private String title;
     private String type;

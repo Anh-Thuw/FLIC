@@ -7,7 +7,7 @@ import com.flic.courseRegister.entity.LessonMaterial;
 import java.util.List;
 
 public interface LessonMaterialService {
-    LessonMaterial createMaterial(LessonMaterialCreateDTO lessonMaterialCreateDTO);
+    LessonMaterialViewDTO createMaterial(LessonMaterialCreateDTO lessonMaterialCreateDTO);
 
-    List<LessonMaterialViewDTO> getMaterialByLesson(Long lessonId);
+    List<LessonMaterialViewDTO> getMaterialByCourse(Long courseId);
 }

@@ -12,15 +12,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/lecturer/assignments")
+@RequestMapping("api/assignments")
 @RequiredArgsConstructor
 public class AssignmentController {
     private final AssignmentService assignmentService;
-    @PostMapping
+    @PostMapping("/create")
     @PreAuthorize("hasRole('INSTRUCTOR')")
     public ResponseEntity<ApiResponse<AssignmentViewDTO>> createAssignment(@RequestBody AssignmentCreateDTO assignmentCreateDTO){
         AssignmentViewDTO assignment = assignmentService.createAssignment(assignmentCreateDTO);
         return ResponseEntity.ok(new ApiResponse<>("Tạo bài tập thành công!",assignment));
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<AssignmentViewDTO>> getAssignmentDetailsById(@RequestParam Long assignmentId){
+        return ResponseEntity.ok(assignmentService.getAssignmentDetailsById(assignmentId));
     }
     @GetMapping("/lesson")
     public ResponseEntity<List<AssignmentViewDTO>> getAssignmentByLesson(@RequestParam Long lessonId){

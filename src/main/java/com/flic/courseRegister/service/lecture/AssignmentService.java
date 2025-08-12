@@ -8,4 +8,6 @@ import java.util.List;
 public interface AssignmentService {
     AssignmentViewDTO createAssignment(AssignmentCreateDTO assignmentCreateDTO);
     List<AssignmentViewDTO> getAssignmentByLessonId(Long lessonId);
+
+    List<AssignmentViewDTO> getAssignmentDetailsById(Long assignmentId);
 }

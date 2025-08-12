@@ -9,6 +9,12 @@ public class LecturerMapper {
     public LecturerProfileDTO toDto(InstructorProfile instructorProfile){
         return LecturerProfileDTO.builder()
                 .id(instructorProfile.getId())
+                .fullName(instructorProfile.getUser().getFullName())
+                .phone(instructorProfile.getUser().getPhone())
+                .status(instructorProfile.getUser().getStatus())
+                .birthday(instructorProfile.getUser().getBirthDate())
+                .birthPlace(instructorProfile.getUser().getBirthPlace())
+                .gender(instructorProfile.getUser().getGender())
                 .email(instructorProfile.getUser().getEmail())
                 .degree(instructorProfile.getDegree())
                 .profileImage(instructorProfile.getProfileImage())

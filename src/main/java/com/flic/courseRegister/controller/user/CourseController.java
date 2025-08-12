@@ -1,6 +1,7 @@
 package com.flic.courseRegister.controller.user;
 
 import com.flic.courseRegister.dto.user.CourseDetailResponse;
+import com.flic.courseRegister.dto.user.CourseProgressResponseDTO;
 import com.flic.courseRegister.dto.user.CourseResponse;
 import com.flic.courseRegister.repository.CourseRepository;
 import com.flic.courseRegister.service.user.CourseService;
@@ -34,9 +35,9 @@ public class CourseController {
     }
 
     @GetMapping("/registered")
-    public ResponseEntity<List<CourseDetailResponse>> getCourseRegisteredByUser(Authentication authentication){
+    public ResponseEntity<List<CourseProgressResponseDTO>> getCourseRegisteredByUser(Authentication authentication){
         String email = authentication.getName();
-        List<CourseDetailResponse> courseDetaiList = courseService.getCourseByUserEmail(email);
+        List<CourseProgressResponseDTO> courseDetaiList = courseService.getCourseByUserEmail(email);
         return ResponseEntity.ok(courseDetaiList);
     }
 }

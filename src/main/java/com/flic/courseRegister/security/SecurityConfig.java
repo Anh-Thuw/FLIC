@@ -66,7 +66,7 @@ public class    SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/login",  "/api/register","/api/course","/api/public/enroll").permitAll()
-                        .requestMatchers("/api/login",  "/api/register","/api/course","/api/enrollments","/api/public/enroll","/api/public/user-info/**").permitAll()
+//                        .requestMatchers("/api/login",  "/api/register","/api/course","/api/enrollments","/api/public/enroll","/api/public/user-info/**").permitAll()
                         .requestMatchers("/api/lesson/create", "/api/lesson/update","/api/lecturer/assignments").hasRole("INSTRUCTOR")
                         .anyRequest().authenticated()
                 )

@@ -25,7 +25,7 @@ public class AdminController {
 
     private final AdminService service;
 
-//  Lấy danh sách người dùng
+    // Lấy danh sách tất cả user
     @GetMapping("/users")
     public ResponseEntity<Page<UserAdminViewDTO>> getUsers(
             @RequestParam(defaultValue = "0") int page,
@@ -37,6 +37,19 @@ public class AdminController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return ResponseEntity.ok(service.getAllUsers(pageable, status, role, keyword));
     }
+
+    // Lấy danh sách giảng viên
+    @GetMapping("/lecturers")
+    public ResponseEntity<Page<UserAdminViewDTO>> getTeachers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String keyword) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return ResponseEntity.ok(service.getAllTeachers(pageable, status, keyword));
+    }
+
     @GetMapping("/users/{id}")
     public ResponseEntity<UserAdminViewDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getUserById(id));

@@ -123,5 +123,14 @@ public class AdminServiceImpl implements AdminService {
             throw new EntityNotFoundException("Course not found");
         courseRepo.deleteById(id);
     }
+
+    //    xem ds gv
+    @Override
+    public Page<UserAdminViewDTO> getAllTeachers(Pageable pageable, String status, String keyword) {
+        // Tái sử dụng findWithFilters và cố định role = "lecturer"
+        Page<User> teachers = userRepo.findWithFilters(keyword, status, "lecturer", pageable);
+        return teachers.map(userMapper::toDto);
+    }
+
 }
 

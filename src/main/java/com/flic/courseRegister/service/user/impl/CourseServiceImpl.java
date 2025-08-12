@@ -1,6 +1,7 @@
 package com.flic.courseRegister.service.user.impl;
 
 import com.flic.courseRegister.dto.user.CourseDetailResponse;
+import com.flic.courseRegister.dto.user.CourseProgressResponseDTO;
 import com.flic.courseRegister.dto.user.CourseResponse;
 import com.flic.courseRegister.entity.Course;
 import com.flic.courseRegister.entity.CourseInstructor;
@@ -11,11 +12,9 @@ import com.flic.courseRegister.repository.CourseInstructorRepository;
 import com.flic.courseRegister.repository.CourseRepository;
 import com.flic.courseRegister.repository.EnrollmentRepository;
 import com.flic.courseRegister.service.user.CourseService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -49,15 +48,16 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseDetailResponse> getCourseByUserEmail(String email) {
+    public List<CourseProgressResponseDTO> getCourseByUserEmail(String email) {
         List<Enrollment> enrollmentList = enrollmentRepository.findByUserEmail(email);
         return enrollmentList.stream()
                 .map(enrollment -> {
                     Course course = enrollment.getCourse();
                     CourseInstructor courseInstructor = courseInstructorRepository.findByCourseId(course.getId());
-
-                    return courseMapper.toDetailDto(course, courseInstructor);
+                    CourseDetailResponse courseDetail = courseMapper.toDetailDto(course, courseInstructor);
+                    return new CourseProgressResponseDTO(courseDetail, enrollment.getProgress());
                 })
                 .toList();
     }
+
 }

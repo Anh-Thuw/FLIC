@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class LessonMaterialViewDTO {
     private Long id;
+    private Long courseId;
     private String title;
     private String fileUrl;
     private String type;

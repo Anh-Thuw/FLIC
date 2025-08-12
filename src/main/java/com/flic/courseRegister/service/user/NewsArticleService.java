@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface NewsArticleService {
     List<NewsArticleDTO> getLatestNews();
+    NewsArticleDTO getById(Long id);
 }

@@ -35,4 +35,11 @@ public class AssignmentServiceImpl implements AssignmentService {
                 .map(assignmentMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<AssignmentViewDTO> getAssignmentDetailsById(Long assignmentId) {
+        return assignmentRepository.findById(assignmentId).stream()
+                .map(assignmentMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }

@@ -3,6 +3,7 @@ package com.flic.courseRegister.dto.user;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,5 +14,6 @@ public class AssignmentViewDTO {
     private String description;
     private LocalDateTime dueDate;
     private String fileUrl;
+    private boolean submitted;
 }
 

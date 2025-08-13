@@ -27,5 +27,7 @@ public interface AdminService {
     void updateUser(Long id, UserUpdateDTO dto);
     void deleteUser(Long id);
     UserAdminViewDTO getUserById(Long id);
+
+    Page<UserAdminViewDTO> getAllTeachers(Pageable pageable, String status, String keyword);
 }
 

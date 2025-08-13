@@ -13,13 +13,17 @@ import com.flic.courseRegister.mapper.admin.CourseCreateMapper;
 import com.flic.courseRegister.mapper.admin.UserAdminMapper;
 import com.flic.courseRegister.mapper.admin.UserCreateMapper;
 import com.flic.courseRegister.repository.CourseRepository;
+import com.flic.courseRegister.repository.EnrollmentRepository;
+import com.flic.courseRegister.repository.PaymentRepository;
 import com.flic.courseRegister.repository.UserRepository;
 import com.flic.courseRegister.service.admin.AdminService;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,17 +68,34 @@ public class AdminServiceImpl implements AdminService {
         User user = userRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng"));
 
+        // Kiểm tra trùng mã sinh viên (studentId) (nếu thay đổi và không null)
+        if (dto.getStudentId() != null && !dto.getStudentId().equals(user.getStudentId())) {
+            if (userRepo.existsByStudentId(dto.getStudentId())) {
+                throw new IllegalArgumentException("Mã sinh viên đã tồn tại");
+            }
+            user.setStudentId(dto.getStudentId());
+        }
+
+        // Cập nhật các trường còn lại từ DTO
         userCreateMapper.updateEntity(user, dto);
+
         userRepo.save(user);
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long id) {
-        if (!userRepo.existsById(id)) {
-            throw new EntityNotFoundException("Không tìm thấy người dùng");
-        }
-        userRepo.deleteById(id);
+        // Lấy user ra từ DB
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng"));
+
+        // Cập nhật trạng thái "deleted" thay cho xóa cứng
+        user.setStatus("deleted");
+
+        // Lưu lại user với trạng thái mới
+        userRepo.save(user);
     }
+
 
     @Override
     public UserAdminViewDTO getUserById(Long id) {
@@ -123,5 +144,14 @@ public class AdminServiceImpl implements AdminService {
             throw new EntityNotFoundException("Course not found");
         courseRepo.deleteById(id);
     }
+
+    //    xem ds gv
+    @Override
+    public Page<UserAdminViewDTO> getAllTeachers(Pageable pageable, String status, String keyword) {
+        // Tái sử dụng findWithFilters và cố định role = "lecturer"
+        Page<User> teachers = userRepo.findWithFilters(keyword, status, "lecturer", pageable);
+        return teachers.map(userMapper::toDto);
+    }
+
 }
 

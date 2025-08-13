@@ -21,7 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE " +
             "(:keyword IS NULL OR u.fullName LIKE %:keyword% OR u.email LIKE %:keyword% OR u.studentId LIKE %:keyword%) " +
             "AND (:status IS NULL OR u.status = :status) " +
-            "AND (:role IS NULL OR u.role = :role)")
+            "AND (:role IS NULL OR u.role = :role)" +
+            " AND u.status <> 'deleted'")
     Page<User> findWithFilters(@Param("keyword") String keyword,
                                @Param("status") String status,
                                @Param("role") String role,

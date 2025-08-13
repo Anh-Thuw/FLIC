@@ -55,6 +55,22 @@ public class AdminController {
         return ResponseEntity.ok(service.getUserById(id));
     }
 
+    // Sửa thông tin user
+    @PutMapping("/users/{id}")
+    public ResponseEntity<ApiMessage> updateNormalUser(
+            @PathVariable Long id,
+            @Valid @RequestBody UserUpdateDTO dto) {
+        service.updateUser(id, dto);
+        return ResponseEntity.ok(new ApiMessage("Cập nhật người dùng thành công"));
+    }
+
+    // Xóa user
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<ApiMessage> deleteNormalUser(@PathVariable Long id) {
+        service.deleteUser(id);
+        return ResponseEntity.ok(new ApiMessage("Xóa người dùng thành công"));
+    }
+
     @PostMapping("/lecturer")
     public ResponseEntity<ApiMessage> createUser(@Valid @RequestBody UserCreateDTO dto) {
         Long id = service.createUser(dto);
@@ -74,6 +90,8 @@ public class AdminController {
         service.deleteUser(id);
         return ResponseEntity.ok(new ApiMessage("Xóa người dùng thành công"));
     }
+
+
     // Xem ds courses
     @GetMapping("/courses")
     public ResponseEntity<List<CourseAdminViewDTO>> getCourses(

@@ -23,7 +23,7 @@ public class LessonMapper {
     }
     public LessonViewDTO toDto(Lesson lesson){
         return LessonViewDTO.builder()
-
+                .id(lesson.getId())
                 .title(lesson.getTitle())
                 .description(lesson.getDescription())
                 .session_index(lesson.getSessionIndex())

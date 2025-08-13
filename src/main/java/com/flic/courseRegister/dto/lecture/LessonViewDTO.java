@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class LessonViewDTO {
+    private Long id;
     private Long courseId;
     private String title;
     private String description;

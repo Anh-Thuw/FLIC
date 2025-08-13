@@ -57,14 +57,14 @@ public class LessonController {
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @PostMapping("/create-materials")
     public ResponseEntity<?> createMaterial(@RequestBody LessonMaterialCreateDTO dto) {
-        LessonMaterial material = lessonMaterialService.createMaterial(dto);
+        LessonMaterialViewDTO material = lessonMaterialService.createMaterial(dto);
         return ResponseEntity.ok(material);
     }
 
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @GetMapping("/materials")
-    public ResponseEntity<?> getLessonMaterials(@RequestParam Long lessonId) {
-        List<LessonMaterialViewDTO> materials = lessonMaterialService.getMaterialByLesson(lessonId);
+    public ResponseEntity<?> getMaterialsByCourse(@RequestParam Long courseId) {
+        List<LessonMaterialViewDTO> materials = lessonMaterialService.getMaterialByCourse(courseId);
         return ResponseEntity.ok(materials);
     }
 

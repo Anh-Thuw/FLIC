@@ -49,11 +49,22 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy user với email: " +email ));
-        System.out.println(">>> ID User: " + user.getId());
+
+
+        // ✅ Cập nhật thông tin user từ form (trừ email)
+        if (request.getFullName() != null) user.setFullName(request.getFullName());
+        if (request.getPhone() != null) user.setPhone(request.getPhone());
+        if (request.getGender() != null) user.setGender(request.getGender());
+        if (request.getBirthDate() != null) user.setBirthDate(LocalDate.parse(request.getBirthDate()));
+        if (request.getJob() != null) user.setJob(request.getJob());
+        if (request.getIdStudent() != null) user.setStudentId(request.getIdStudent());
+        if (request.getSchoolName() != null) user.setSchoolName(request.getSchoolName());
+        if (request.getIdNumber() != null) user.setIdNumber(request.getIdNumber());
+
+        userRepository.save(user);
         if (enrollmentRepository.existsByUserIdAndCourseId(user.getId(), request.getCourseId())) {
             throw new IllegalArgumentException("Bạn đã đăng ký khóa học này rồi");
         }
-
 
 
         Course course = courseRepository.findById(request.getCourseId())
@@ -89,6 +100,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .enrollmentId(enrollment.getId())
                 .paymentId(payment.getId())
                 .courseId(course.getId())
+                .enrollmentStatus(enrollment.getStatus().toString())
+                .paymentFor(payment.getPaymentFor().toString())
+                .paymentStatus(payment.getPaymentStatus())
                 .build();
 //        return enrollmentMapper.toDto(saved);
     }

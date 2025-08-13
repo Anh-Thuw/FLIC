@@ -13,6 +13,17 @@ import java.math.BigDecimal;
 @Builder
 public class EnrollmentRequest {
 
+
+    private String fullName;
+    private String phone;
+    private String gender;
+    private String birthDate; // Định dạng yyyy-MM-dd
+    private String job;
+    private String idStudent;
+    private String schoolName;
+    private String idNumber;     // CCCD
+
+
     private Long courseId;
 
 

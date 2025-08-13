@@ -16,5 +16,6 @@ public class EnrollmentResponse {
     private Long enrollmentId; // ⬅ bổ sung
     private Long paymentId;    // ⬅ bổ sung
     private String enrollmentStatus;  // trạng thái enrollment, ví dụ "PENDING", "CONFIRMED", "CANCELLED"
-    private String paymentStatus;     // trạng thái thanh toán, ví dụ "pending", "completed", "failed"
+    private String paymentStatus;
+    private String paymentFor;// trạng thái thanh toán, ví dụ "pending", "completed", "failed"
 }

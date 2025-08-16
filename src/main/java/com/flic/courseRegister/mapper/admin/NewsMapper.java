@@ -41,6 +41,19 @@ public class NewsMapper {
                 .updatedAt(dto.getUpdatedAt())
                 .build();
     }
+
+    // thêm phương thức cho create
+    public NewsArticle toEntityForCreate(NewsDTO dto) {
+        if (dto == null) return null;
+        return NewsArticle.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .publishedAt(dto.getPublishedAt())
+                .avatarUrl(dto.getAvatarUrl())
+                .build();
+    }
+
+
     public void updateNews( NewsDTO dto , NewsArticle entity , User user  ) {
         if (dto == null || entity == null) {
             return;

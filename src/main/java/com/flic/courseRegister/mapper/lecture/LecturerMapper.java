@@ -17,7 +17,7 @@ public class LecturerMapper {
                 .gender(instructorProfile.getUser().getGender())
                 .email(instructorProfile.getUser().getEmail())
                 .degree(instructorProfile.getDegree())
-                .profileImage(instructorProfile.getProfileImage())
+                .profileImage(instructorProfile.getUser().getAvatarUrl())
                 .specialization(instructorProfile.getSpecialization())
                 .bio(instructorProfile.getBio())
                 .build();
@@ -33,18 +33,4 @@ public class LecturerMapper {
                 .build();
     }
 
-    public void updateLecturerFromDto(LecturerProfileDTO lecturerProfileDTO, InstructorProfile instructorProfile){
-        if(lecturerProfileDTO.getDegree()!= null){
-            instructorProfile.setDegree(lecturerProfileDTO.getDegree());
-        }
-        if(lecturerProfileDTO.getSpecialization()!=null){
-            instructorProfile.setSpecialization(lecturerProfileDTO.getSpecialization());
-        }
-        if(lecturerProfileDTO.getBio()!=null){
-            instructorProfile.setBio(lecturerProfileDTO.getBio());
-        }
-        if(lecturerProfileDTO.getProfileImage()!=null){
-            instructorProfile.setProfileImage(lecturerProfileDTO.getProfileImage());
-        }
-    }
 }

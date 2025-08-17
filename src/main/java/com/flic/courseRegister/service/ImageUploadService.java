@@ -61,6 +61,28 @@ public class ImageUploadService {
             throw new RuntimeException("Upload failed: " + e.getMessage(), e);
         }
     }
+
+    public ImageUploadResult uploadToNews(MultipartFile file, String publicId) {
+        try {
+            Map<String, Object> params = ObjectUtils.asMap(
+                    "folder", "news",
+                    "public_id", publicId,
+                    "overwrite", true,
+                    "unique_filename", false,
+                    "use_filename", false,
+                    "invalidate", true,
+                    "resource_type", "image"
+            );
+            Map<String, Object> res = cloudinary.uploader().upload(file.getBytes(), params);
+            return ImageUploadResult.builder()
+                    .imageUrl((String) res.get("secure_url"))
+                    .publicId((String) res.get("public_id"))
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException("Upload failed: " + e.getMessage(), e);
+        }
+    }
+
 }
 
 

@@ -23,4 +23,5 @@ public class LearningPathMapper {
                 .title(learningPathViewDTO.getTitle())
                 .build();
     }
+
 }

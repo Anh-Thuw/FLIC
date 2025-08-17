@@ -6,10 +6,14 @@ import com.flic.courseRegister.entity.User;
 import com.flic.courseRegister.mapper.admin.NewsMapper;
 import com.flic.courseRegister.repository.NewsRepository;
 import com.flic.courseRegister.repository.UserRepository;
+import com.flic.courseRegister.service.ImageUploadService;
 import com.flic.courseRegister.service.admin.NewsService;
-import com.flic.courseRegister.service.user.UserService;
+import com.flic.courseRegister.dto.admin.NewsCreateRequest;
+import com.flic.courseRegister.dto.ImageUploadResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +25,7 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepository    newsRepos;
     private final NewsMapper        newsMapper ;
     private final UserRepository    userRepo;
+    private final ImageUploadService imageUploadService;
     private final LocalDateTime     now = LocalDateTime.now();
     @Override
     public List<NewsDTO> getAllNews() {
@@ -43,6 +48,45 @@ public class NewsServiceImpl implements NewsService {
         NewsArticle saved = newsRepos.save(article);
         return newsMapper.toDto(saved);
     }
+
+    @Override
+    public NewsDTO createNewsWithImage(NewsDTO newsDTO, MultipartFile image, String userEmail) {
+        User user = userRepo.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        LocalDateTime now = LocalDateTime.now();
+
+        String avatarUrl = null;
+        if (image != null && !image.isEmpty()) {
+            String slug = slugify(newsDTO.getTitle());
+            String publicId = "news_" + System.currentTimeMillis() + "_" + slug; // không cần chứa 'news/' ở đây
+            ImageUploadResult up = imageUploadService.uploadToNews(image, publicId); // <== vào folder news
+            avatarUrl = up.getImageUrl();
+        }
+
+        NewsArticle entity = NewsArticle.builder()
+                .title(newsDTO.getTitle())
+                .content(newsDTO.getContent())
+                .publishedAt(newsDTO.getPublishedAt() != null ? newsDTO.getPublishedAt() : now)
+                .avatarUrl(avatarUrl)          // <== link ảnh Cloudinary
+                .user(user)
+                .createdAt(now)
+                .updatedAt(now)
+                .build();
+
+        NewsArticle saved = newsRepos.save(entity);
+        return NewsMapper.toDto(saved);
+    }
+
+    private String slugify(String s) {
+        if (s == null) return "untitled";
+        String out = s.toLowerCase()
+                .replaceAll("[^a-z0-9\\s-]", "")
+                .replaceAll("\\s+", "-")
+                .replaceAll("-{2,}", "-");
+        return out.isBlank() ? "untitled" : (out.length() > 60 ? out.substring(0, 60) : out);
+    }
+
 
     @Override
     public NewsDTO updateNews(Long id, NewsDTO newsDTO, String userEmail) {

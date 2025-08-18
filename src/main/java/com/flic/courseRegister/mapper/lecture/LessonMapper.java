@@ -15,8 +15,9 @@ public class LessonMapper {
         return Lesson.builder()
                 .title(lessonCreateDTO.getTitle())
                 .description(lessonCreateDTO.getDescription())
-                .weekIndex(lessonCreateDTO.getWeek_index())
-                .sessionIndex(lessonCreateDTO.getSession_index())
+                .weekIndex(lessonCreateDTO.getWeekIndex())
+                .plannedAt(lessonCreateDTO.getPlannedAt())
+                .endTime(lessonCreateDTO.getEndTime())
                 .course(course)
                 .creatorId(user)
                 .build();
@@ -26,8 +27,9 @@ public class LessonMapper {
                 .id(lesson.getId())
                 .title(lesson.getTitle())
                 .description(lesson.getDescription())
-                .session_index(lesson.getSessionIndex())
-                .week_index(lesson.getWeekIndex())
+                .weekIndex(lesson.getWeekIndex())
+                .plannedAt(lesson.getPlannedAt())
+                .endTime(lesson.getEndTime())
                 .build();
     }
     public LessonRevision updateEntity(Lesson lesson, LessonUpdateDTO dto, User editor) {

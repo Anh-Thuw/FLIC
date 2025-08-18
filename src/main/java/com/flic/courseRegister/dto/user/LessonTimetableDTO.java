@@ -9,7 +9,7 @@ import lombok.*;
 public class LessonTimetableDTO {
     private String courseTitle;
     private String lecturerName;
-    private int weekIndex;
+    private String weekIndex;
     private int sessionIndex;
     private String dayOfWeek;
     private String startTime;

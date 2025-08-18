@@ -41,9 +41,20 @@ public class LecturerServiceImpl implements LecturerService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
         InstructorProfile lecturer = lecturerRepository.findByUserEmail(user.getEmail())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy giảng viên"));
-        lecturerMapper.updateLecturerFromDto(lecturerProfileDTO,lecturer);
-        lecturerRepository.save(lecturer);
-        return lecturerMapper.toDto(lecturer);
+        if(lecturerProfileDTO.getFullName()!=null) lecturer.getUser().setFullName(lecturerProfileDTO.getFullName());
+        if(lecturerProfileDTO.getPhone()!=null) lecturer.getUser().setPhone(lecturerProfileDTO.getPhone());
+        if(lecturerProfileDTO.getBirthday()!=null) lecturer.getUser().setBirthDate(lecturerProfileDTO.getBirthday());
+        if(lecturerProfileDTO.getBirthPlace()!=null) lecturer.getUser().setBirthPlace(lecturerProfileDTO.getBirthPlace());
+        if(lecturerProfileDTO.getGender()!=null) lecturer.getUser().setGender(lecturerProfileDTO.getGender());
+        if(lecturerProfileDTO.getEmail()!=null) lecturer.getUser().setEmail(lecturerProfileDTO.getEmail());
+        if(lecturerProfileDTO.getProfileImage()!=null) lecturer.getUser().setAvatarUrl(lecturerProfileDTO.getProfileImage());
+        if(lecturerProfileDTO.getDegree()!=null) lecturer.setDegree(lecturerProfileDTO.getDegree());
+        if(lecturerProfileDTO.getSpecialization()!=null) lecturer.setSpecialization(lecturerProfileDTO.getSpecialization());
+        if(lecturerProfileDTO.getBio()!=null) lecturer.setBio(lecturerProfileDTO.getBio());
+
+        InstructorProfile lecturerSaved = instructorProfileRepository.save(lecturer);
+
+        return lecturerMapper.toDto(lecturerSaved);
     }
 
     @Transactional(rollbackFor = Exception.class)

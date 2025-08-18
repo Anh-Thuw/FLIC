@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,6 +16,7 @@ public class LessonViewDTO {
     private Long courseId;
     private String title;
     private String description;
-    private Integer week_index;
-    private Integer session_index;
+    private Integer weekIndex;
+    private LocalDateTime plannedAt;
+    private LocalDateTime endTime;
 }

@@ -22,24 +22,20 @@ public class Lesson {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "video_url")
-    private String videoUrl;
-
 
     @Column(name ="week_index")
     private Integer weekIndex;
 
-    @Column(name ="session_index")
-    private Integer sessionIndex;
 
-    @Column(name = "order_index")
-    private Integer orderIndex;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @Column(name = "planned_at")
     private LocalDateTime plannedAt;
+
+    @Column(name = "end_time")
+    private LocalDateTime endTime;
 
     @Column(name = "is_flexible")
     private boolean isFlexible;

@@ -10,11 +10,19 @@ import java.util.List;
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
     List<Lesson> findByCourseId(Long courseId);
 
+//    @Query("""
+//        SELECT l FROM Lesson l
+//        JOIN Enrollment e ON e.course.id = l.course.id
+//        WHERE e.user.id = :userId
+//        ORDER BY l.weekIndex, l.sessionIndex
+//    """)
+
+
     @Query("""
         SELECT l FROM Lesson l
         JOIN Enrollment e ON e.course.id = l.course.id
         WHERE e.user.id = :userId
-        ORDER BY l.weekIndex, l.sessionIndex
+        ORDER BY l.weekIndex, l.plannedAt
     """)
     List<Lesson> findLessonsByUserId(@Param("userId") Long userId);
 

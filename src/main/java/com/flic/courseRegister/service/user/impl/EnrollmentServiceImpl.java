@@ -10,11 +10,13 @@ import com.flic.courseRegister.repository.CourseRepository;
 import com.flic.courseRegister.repository.EnrollmentRepository;
 import com.flic.courseRegister.repository.PaymentRepository;
 import com.flic.courseRegister.repository.UserRepository;
+import com.flic.courseRegister.service.ImageUploadService;
 import com.flic.courseRegister.service.user.EnrollmentService;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,22 +30,25 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private final CourseRepository courseRepository;
     private final PaymentRepository paymentRepository;    // <-- bổ sung field này
     private final EnrollmentMapper enrollmentMapper;
+    private final ImageUploadService imageUploadService;
 
     public EnrollmentServiceImpl(
             EnrollmentRepository enrollmentRepository,
             UserRepository userRepository,
             CourseRepository courseRepository,
             PaymentRepository paymentRepository,           // <-- inject đúng
-            EnrollmentMapper enrollmentMapper) {
+            EnrollmentMapper enrollmentMapper,
+            ImageUploadService imageUploadService) {
         this.enrollmentRepository = enrollmentRepository;
         this.userRepository = userRepository;
         this.courseRepository = courseRepository;
         this.paymentRepository = paymentRepository;        // <-- gán vào biến field đã tạo
         this.enrollmentMapper = enrollmentMapper;
+        this.imageUploadService = imageUploadService;
     }
 
     @Override
-    public EnrollmentResponse enroll(EnrollmentRequest request) {
+    public EnrollmentResponse enroll(EnrollmentRequest request, MultipartFile file) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
 
@@ -53,8 +58,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         if (enrollmentRepository.existsByUserIdAndCourseId(user.getId(), request.getCourseId())) {
             throw new IllegalArgumentException("Bạn đã đăng ký khóa học này rồi");
         }
-
-
 
         Course course = courseRepository.findById(request.getCourseId())
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy khóa học với ID: " + request.getCourseId()));
@@ -66,13 +69,20 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .progress(BigDecimal.ZERO)
                 .build();
 
-        Enrollment saved = enrollmentRepository.save(enrollment);
+        enrollment = enrollmentRepository.save(enrollment);
+
+        // 🔹 Upload ảnh nếu có
+        String billImageUrl = null;
+        if (file != null && !file.isEmpty()) {
+            String publicId = "enrollment_" + enrollment.getId() + "_" + System.currentTimeMillis();
+            billImageUrl = imageUploadService.uploadToPayments(file, publicId).getImageUrl();
+        }
 
         Payment payment = Payment.builder()
                 .enrolmentId(enrollment.getId())  // gán id enrollment (Long)
                 .amount(request.getAmount())
                 .paymentMethod(request.getPaymentMethod())
-                .billImage(request.getBillImage())
+                .billImage(billImageUrl)
                 .notePayment(request.getNote())
                 .paymentStatus(request.getPaymentStatus() != null ? request.getPaymentStatus() : "pending")
                 .paidAt(request.getPaidAt() != null ? LocalDateTime.parse(request.getPaidAt()) : null)
@@ -80,21 +90,23 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-
         payment = paymentRepository.save(payment);
 
         // 5. Trả về response
         return EnrollmentResponse.builder()
+                .id(enrollment.getId())
                 .userId(user.getId())
+                .courseId(course.getId())
                 .enrollmentId(enrollment.getId())
                 .paymentId(payment.getId())
-                .courseId(course.getId())
+                .enrollmentStatus(enrollment.getStatus() != null ? enrollment.getStatus().name() : null)
+                .paymentStatus(payment.getPaymentStatus())
                 .build();
 //        return enrollmentMapper.toDto(saved);
     }
     @Override
     @Transactional
-    public EnrollmentResponse publicEnroll(PublicEnrollmentRequest req) {
+    public EnrollmentResponse publicEnroll(PublicEnrollmentRequest req, MultipartFile file) {
         // 1. Tạo mới User
         User user = User.builder()
                 .email(req.getEmail())
@@ -128,12 +140,19 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         enrollment = enrollmentRepository.save(enrollment);
 
+        // 🔹 Upload ảnh nếu có
+        String billImageUrl = null;
+        if (file != null && !file.isEmpty()) {
+            String publicId = "enrollment_" + enrollment.getId() + "_" + System.currentTimeMillis();
+            billImageUrl = imageUploadService.uploadToPayments(file, publicId).getImageUrl();
+        }
+
         // 4. Tạo Payment record sử dụng enrolmentId thay vì Enrollment entity
         Payment payment = Payment.builder()
                 .enrolmentId(enrollment.getId())  // gán id enrollment (Long)
                 .amount(req.getAmount())
                 .paymentMethod(req.getPaymentMethod())
-                .billImage(req.getBillImage())
+                .billImage(billImageUrl)
                 .notePayment(req.getNote())
                 .paymentStatus(req.getPaymentStatus() != null ? req.getPaymentStatus() : "pending")
                 .paidAt(req.getPaidAt() != null ? LocalDateTime.parse(req.getPaidAt()) : null)
@@ -146,10 +165,13 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         // 5. Trả về response
         return EnrollmentResponse.builder()
+                .id(enrollment.getId())
                 .userId(user.getId())
+                .courseId(course.getId())
                 .enrollmentId(enrollment.getId())
                 .paymentId(payment.getId())
-                .courseId(course.getId())
+                .enrollmentStatus(enrollment.getStatus() != null ? enrollment.getStatus().name() : null)
+                .paymentStatus(payment.getPaymentStatus())
                 .build();
     }
 

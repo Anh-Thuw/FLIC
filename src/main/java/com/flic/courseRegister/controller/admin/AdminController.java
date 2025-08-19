@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -103,12 +104,14 @@ public class AdminController {
         return ResponseEntity.ok(service.getAllCourses(status, type, startMonth, keyword));
     }
 
-    @PostMapping("/courses")
-    public ResponseEntity<ApiMessage> createCourse(
-            @Valid @RequestBody CourseCreateDTO dto) {
+    @PostMapping(path = "/courses",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiMessage> createCourse(@Valid @ModelAttribute CourseCreateDTO dto) {
 
         Long id = service.createCourse(dto);
         return ResponseEntity.ok(new ApiMessage("Tạo khoá học thành công, course_id = " + id));
+
     }
     @GetMapping("/courses/{id}")
     public ResponseEntity<CourseAdminViewDTO> getCourseById(@PathVariable Long id) {

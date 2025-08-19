@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
@@ -23,7 +24,7 @@ public class CourseCreateDTO {
     @Min(1)
     private Integer duration;  // phút
 
-    private String image;
+    private MultipartFile image;
 
     private String startMonth;  // VD: "2025-08", "2025-12"
 

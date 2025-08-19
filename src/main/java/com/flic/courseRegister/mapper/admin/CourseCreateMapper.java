@@ -15,7 +15,7 @@ public class CourseCreateMapper {
                 .description(dto.getDescription())
                 .price(dto.getPrice())
                 .duration(dto.getDuration())
-                .image(dto.getImage())
+//                .image(dto.getImage())
                 .startMonth(dto.getStartMonth())
                 .type(dto.getType())
                 .status("draft")  // Mặc định là draft

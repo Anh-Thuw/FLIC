@@ -16,6 +16,7 @@ import com.flic.courseRegister.repository.CourseRepository;
 import com.flic.courseRegister.repository.EnrollmentRepository;
 import com.flic.courseRegister.repository.PaymentRepository;
 import com.flic.courseRegister.repository.UserRepository;
+import com.flic.courseRegister.service.ImageUploadService;
 import com.flic.courseRegister.service.admin.AdminService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,8 +24,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +41,7 @@ public class AdminServiceImpl implements AdminService {
     private final CourseRepository courseRepo;
     private final CourseAdminMapper courseMapper;
     private final CourseCreateMapper createMapper;
+    private final ImageUploadService imageUploadService;
 
     //  USER METHODS
     @Override
@@ -123,9 +127,57 @@ public class AdminServiceImpl implements AdminService {
     //Tạo khóa học
     @Override
     public Long createCourse(CourseCreateDTO dto) {
-        Course course = createMapper.toEntity(dto);
-        Course saved = courseRepo.save(course);
-        return saved.getId();
+        try {
+            String imageUrl = null;
+
+            // 1) Upload ảnh nếu có
+            if (dto.getImage() != null && !dto.getImage().isEmpty()) {
+                validateImage(dto.getImage());
+                String publicId = "course_" + System.currentTimeMillis() + "_" + slugify(dto.getTitle());
+                imageUrl = imageUploadService
+                        .uploadToCourses(dto.getImage(), publicId)   // folder "courses"
+                        .getImageUrl();
+            }
+
+            // 2) Tạo entity và set URL ảnh (có thể null)
+            Course course = Course.builder()
+                    .title(dto.getTitle())
+                    .description(dto.getDescription())
+                    .price(dto.getPrice())
+                    .duration(dto.getDuration())
+                    .image(imageUrl)
+                    .startMonth(dto.getStartMonth())
+                    .type(dto.getType())
+                    .status("draft")
+                    .rating(BigDecimal.ZERO)
+                    .build();
+
+            // 3) Lưu DB
+            return courseRepo.save(course).getId();
+
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Tạo khoá học (multipart) thất bại: " + e.getMessage(), e);
+        }
+    }
+
+    private void validateImage(MultipartFile img) {
+        if (!img.getContentType().startsWith("image/")) {
+            throw new RuntimeException("Chỉ hỗ trợ file ảnh.");
+        }
+        if (img.getSize() > 5 * 1024 * 1024) {
+            throw new RuntimeException("Kích thước ảnh tối đa 5MB.");
+        }
+    }
+
+    private String slugify(String s) {
+        if (s == null) return "untitled";
+        String out = s.toLowerCase()
+                .replaceAll("[^a-z0-9\\s-]", "")
+                .replaceAll("\\s+", "-")
+                .replaceAll("-{2,}", "-");
+        return out.isBlank() ? "untitled" : (out.length() > 60 ? out.substring(0, 60) : out);
     }
 
     //Update khóa hoc

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class StudentAttendanceMapper {
     public StudentAttendanceDTO toDto(Attendance attendance){
         return StudentAttendanceDTO.builder()
-                .studentId(attendance.getEnrollment().getUser().getStudentId())
+                .birthDate(attendance.getEnrollment().getUser().getBirthDate())
                 .fullName(attendance.getEnrollment().getUser().getFullName())
                 .status(attendance.getStatus())
                 .build();

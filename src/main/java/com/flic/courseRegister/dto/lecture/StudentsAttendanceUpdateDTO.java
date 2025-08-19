@@ -10,6 +10,7 @@ import com.flic.courseRegister.entity.Attendance.Status;
 @NoArgsConstructor
 @Builder
 public class StudentsAttendanceUpdateDTO {
-    private Long attendanceId;
+    private String fullName;
+    private String birthDate;
     private Status status;
 }

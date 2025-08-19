@@ -2,6 +2,7 @@ package com.flic.courseRegister.service.lecture.impl;
 
 import com.flic.courseRegister.dto.lecture.ListStudentsLessonViewDTO;
 import com.flic.courseRegister.dto.lecture.StudentAttendanceDTO;
+import com.flic.courseRegister.dto.lecture.StudentAttendanceUpdateListDTO;
 import com.flic.courseRegister.dto.lecture.StudentsAttendanceUpdateDTO;
 import com.flic.courseRegister.entity.Attendance;
 import com.flic.courseRegister.mapper.lecture.ListStudentsLessonMapper;
@@ -37,12 +38,21 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public List<StudentAttendanceDTO> updateStatus(Long lessonId, List<StudentsAttendanceUpdateDTO> dtos) {
+    public List<StudentAttendanceDTO> updateStatus(StudentAttendanceUpdateListDTO request) {
+        Long lessonId = request.getLessonId();
+        List<StudentsAttendanceUpdateDTO> dtos = request.getUpdates();
         List<StudentAttendanceDTO> results = new ArrayList<>();
 
-        for (StudentsAttendanceUpdateDTO dto : dtos) {
-            Attendance attendance = attendanceRepository.findById(dto.getAttendanceId())
-                    .orElseThrow(() -> new RuntimeException("Không tìm thấy bản ghi điểm danh"));
+        List<Attendance> attendances = attendanceRepository.findByLessonId(lessonId);
+
+        if (attendances.size() != dtos.size()) {
+            throw new RuntimeException("Số lượng attendance trong DB (" + attendances.size() +
+                    ") không khớp với số lượng updates gửi lên (" + dtos.size() + ")");
+        }
+
+        for (int i = 0; i < dtos.size(); i++) {
+            StudentsAttendanceUpdateDTO dto = dtos.get(i);
+            Attendance attendance = attendances.get(i); // map theo index
 
             attendance.setStatus(dto.getStatus());
             Attendance saved = attendanceRepository.save(attendance);

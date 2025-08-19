@@ -1,5 +1,6 @@
 package com.flic.courseRegister.controller.lecture;
 
+import com.flic.courseRegister.dto.lecture.ApiResponse;
 import com.flic.courseRegister.dto.lecture.ListStudentsLessonViewDTO;
 import com.flic.courseRegister.dto.lecture.StudentAttendanceDTO;
 import com.flic.courseRegister.dto.lecture.StudentAttendanceUpdateListDTO;
@@ -33,21 +34,19 @@ public class AttendanceController {
 
     @PutMapping("/attendance/update-list")
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    public ResponseEntity<Map<String, Object>> updateAttendanceList(
-            @RequestParam  Long lessonId,
-            @RequestBody StudentAttendanceUpdateListDTO updateListDTO) {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            List<StudentAttendanceDTO> result = attendanceService.updateStatus(lessonId,updateListDTO.getUpdates());
-            response.put("message", "Cập nhật điểm danh thành công");
-            response.put("data", result);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.put("message", "Cập nhật điểm danh thất bại");
-            response.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+    public ResponseEntity<ApiResponse<List<StudentAttendanceDTO>>> updateAttendanceStatus(
+            @RequestBody StudentAttendanceUpdateListDTO request) {
+    try {
+        List<StudentAttendanceDTO> updatedList = attendanceService.updateStatus(request);
+        return ResponseEntity.ok(
+                new ApiResponse<>("Cập nhật điểm danh thành công", updatedList)
+        );
+    }catch (Exception e){
+        e.printStackTrace();
+        return ResponseEntity.badRequest().body(
+                new ApiResponse<>("Cập nhật điểm danh thất bại: " + e.getMessage(), null)
+        );
+    }
     }
 
 }

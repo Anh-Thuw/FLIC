@@ -65,6 +65,8 @@ public class    SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // để frontend gọi được API
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/login",  "/api/register", "api/news/**").permitAll()
+                        .requestMatchers("/api/public/enroll").permitAll()
                         .requestMatchers("/api/login",  "/api/register","/api/course","/api/public/enroll","api/news/**").permitAll()
 //                        .requestMatchers("/api/login",  "/api/register","/api/course","/api/enrollments","/api/public/enroll","/api/public/user-info/**").permitAll()
 //                        .requestMatchers("/api/login",  "/api/register", "api/news/**").permitAll()

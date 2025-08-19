@@ -112,7 +112,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .courseId(course.getId())
                 .enrollmentId(enrollment.getId())
                 .paymentId(payment.getId())
-                .paymentFor(payment.getPaymentFor().toString())
                 .enrollmentStatus(enrollment.getStatus() != null ? enrollment.getStatus().name() : null)
                 .paymentStatus(payment.getPaymentStatus())
                 .build();

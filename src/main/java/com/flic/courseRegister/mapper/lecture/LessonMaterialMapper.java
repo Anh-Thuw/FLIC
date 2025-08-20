@@ -16,7 +16,6 @@ public class LessonMaterialMapper {
                 .revision(revision)
                 .title(dto.getTitle())
                 .type(dto.getType())
-                .fileUrl(dto.getFileUrl())
                 .build();
     }
     public LessonMaterialViewDTO toDto(LessonMaterial material) {

@@ -14,5 +14,4 @@ public class LessonMaterialCreateDTO {
     private Long revisionId; // có thể null nếu chưa có revision
     private String title;
     private String type;
-    private String fileUrl;
 }

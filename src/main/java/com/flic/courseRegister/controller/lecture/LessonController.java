@@ -1,5 +1,7 @@
 package com.flic.courseRegister.controller.lecture;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flic.courseRegister.dto.lecture.*;
 import com.flic.courseRegister.entity.LessonMaterial;
 import com.flic.courseRegister.security.UserDetailsImpl;
@@ -7,10 +9,12 @@ import com.flic.courseRegister.service.lecture.LessonMaterialService;
 import com.flic.courseRegister.service.lecture.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -56,11 +60,17 @@ public class LessonController {
     }
 
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    @PostMapping("/create-materials")
-    public ResponseEntity<?> createMaterial(@RequestBody LessonMaterialCreateDTO dto) {
-        LessonMaterialViewDTO material = lessonMaterialService.createMaterial(dto);
+    @PostMapping(value = "/create-materials", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createMaterial(@RequestParam("data") String data,
+                                            @RequestPart("file") MultipartFile file) throws JsonProcessingException {
+
+        LessonMaterialCreateDTO req = new ObjectMapper().readValue(data, LessonMaterialCreateDTO.class);
+        LessonMaterialViewDTO material = lessonMaterialService.createMaterial(req, file);
+
         return ResponseEntity.ok(material);
     }
+
+
 
     @PreAuthorize("hasRole('INSTRUCTOR')")
     @GetMapping("/material")

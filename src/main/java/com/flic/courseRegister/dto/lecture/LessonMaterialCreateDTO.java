@@ -15,4 +15,5 @@ public class LessonMaterialCreateDTO {
     private String title;
     private String type;
     private String fileUrl;
+    private Long creatorId;
 }

@@ -2,6 +2,7 @@ package com.flic.courseRegister.controller.lecture;
 
 import com.flic.courseRegister.dto.lecture.*;
 import com.flic.courseRegister.entity.LessonMaterial;
+import com.flic.courseRegister.security.UserDetailsImpl;
 import com.flic.courseRegister.service.lecture.LessonMaterialService;
 import com.flic.courseRegister.service.lecture.LessonService;
 import lombok.RequiredArgsConstructor;
@@ -62,12 +63,19 @@ public class LessonController {
     }
 
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    @GetMapping("/materials")
-    public ResponseEntity<?> getMaterialsByCourse(@RequestParam Long courseId) {
-        List<LessonMaterialViewDTO> materials = lessonMaterialService.getMaterialByCourse(courseId);
+    @GetMapping("/material")
+    public ResponseEntity<List<LessonMaterialViewDTO>> getMaterialsByCourse(
+            @RequestParam Long courseId,
+            Authentication authentication) {
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        Long creatorId = userDetails.getUser().getId();
+
+        List<LessonMaterialViewDTO> materials =
+                lessonMaterialService.getMaterialByCourse(courseId, creatorId);
+
         return ResponseEntity.ok(materials);
     }
-
     @GetMapping()
     public ResponseEntity<?> getLessonByCourseId(@RequestParam Long courseId){
         List<LessonViewDTO> lesson = lessonService.getLessonByCourseId(courseId);

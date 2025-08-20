@@ -30,6 +30,18 @@ public class TimetableServiceImpl implements TimetableService {
                 .map(timetableMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<LessonTimetableDTO> getCreatorLessons() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var principal = authentication.getPrincipal();
+        Long creatorId = ((com.flic.courseRegister.security.UserDetailsImpl) principal).getUser().getId();
+
+        return lessonRepository.findLessonsByCreatorId(creatorId)
+                .stream()
+                .map(timetableMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }
 
 

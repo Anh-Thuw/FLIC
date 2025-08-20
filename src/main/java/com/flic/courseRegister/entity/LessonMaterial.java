@@ -18,8 +18,12 @@ public class LessonMaterial {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "course_id")
+    @JoinColumn(name = "course_id",nullable = false)
     private Course course;
+
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private User creator;
 
     @ManyToOne
     @JoinColumn(name = "revision_id")

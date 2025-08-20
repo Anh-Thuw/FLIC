@@ -70,7 +70,7 @@ public class    SecurityConfig {
                         .requestMatchers("/api/login",  "/api/register","/api/course","/api/public/enroll","api/news/**").permitAll()
 //                        .requestMatchers("/api/login",  "/api/register","/api/course","/api/enrollments","/api/public/enroll","/api/public/user-info/**").permitAll()
 //                        .requestMatchers("/api/login",  "/api/register", "api/news/**").permitAll()
-                        .requestMatchers("/api/lesson/create", "/api/lesson/update","/api/lecturer/assignments").hasRole("INSTRUCTOR")
+                        .requestMatchers("/api/lesson/create", "/api/lesson/update","/api/lecturer/assignments","/api/lecturer/course").hasRole("INSTRUCTOR")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

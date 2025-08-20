@@ -9,5 +9,5 @@ import java.util.List;
 public interface LessonMaterialService {
     LessonMaterialViewDTO createMaterial(LessonMaterialCreateDTO lessonMaterialCreateDTO);
 
-    List<LessonMaterialViewDTO> getMaterialByCourse(Long courseId);
+    List<LessonMaterialViewDTO> getMaterialByCourse(Long courseId,Long creatorId);
 }

@@ -26,4 +26,11 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     """)
     List<Lesson> findLessonsByUserId(@Param("userId") Long userId);
 
+    @Query("""
+    SELECT l FROM Lesson l
+    WHERE l.creatorId.id = :userId
+    ORDER BY l.weekIndex, l.plannedAt
+""")
+    List<Lesson> findLessonsByCreatorId(@Param("userId") Long userId);
+
 }

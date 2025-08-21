@@ -63,6 +63,7 @@ public class LessonController {
     }
 
     @PreAuthorize("hasRole('INSTRUCTOR')")
+    //xem tài liệu theo khóa học do giảng viên phụ trách
     @GetMapping("/material")
     public ResponseEntity<List<LessonMaterialViewDTO>> getMaterialsByCourse(
             @RequestParam Long courseId,
@@ -72,8 +73,14 @@ public class LessonController {
         Long creatorId = userDetails.getUser().getId();
 
         List<LessonMaterialViewDTO> materials =
-                lessonMaterialService.getMaterialByCourse(courseId, creatorId);
+                lessonMaterialService.getMaterialByCourseLecturer(courseId, creatorId);
 
+        return ResponseEntity.ok(materials);
+    }
+    //xem tài liệu học viên
+    @GetMapping("/materials")
+    public ResponseEntity<?> getMaterialsByCourse(@RequestParam Long courseId) {
+        List<LessonMaterialViewDTO> materials = lessonMaterialService.getMaterialByCourse(courseId);
         return ResponseEntity.ok(materials);
     }
     @GetMapping()

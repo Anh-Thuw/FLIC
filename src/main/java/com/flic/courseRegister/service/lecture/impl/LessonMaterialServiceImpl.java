@@ -61,12 +61,17 @@ public class LessonMaterialServiceImpl implements LessonMaterialService {
     }
 
     @Override
-    public List<LessonMaterialViewDTO> getMaterialByCourse(Long courseId, Long creatorId) {
+    public List<LessonMaterialViewDTO> getMaterialByCourseLecturer(Long courseId, Long creatorId) {
         List<LessonMaterial> materials =
                 lessonMaterialRepository.findByCourseIdAndCreator_Id(courseId, creatorId);
 
         return materials.stream()
                 .map(lessonMaterialMapper::toDto)
                 .collect(Collectors.toList());
+    }
+    @Override
+    public List<LessonMaterialViewDTO> getMaterialByCourse(Long courseId) {
+        List<LessonMaterial> materials = lessonMaterialRepository.findByCourseId(courseId);
+        return materials.stream().map(lessonMaterialMapper::toDto).collect(Collectors.toList());
     }
 }

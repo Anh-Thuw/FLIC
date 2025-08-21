@@ -10,5 +10,6 @@ import java.util.List;
 public interface LessonMaterialService {
     LessonMaterialViewDTO createMaterial(LessonMaterialCreateDTO lessonMaterialCreateDTO, MultipartFile file);
 
-    List<LessonMaterialViewDTO> getMaterialByCourse(Long courseId,Long creatorId);
+    List<LessonMaterialViewDTO> getMaterialByCourseLecturer(Long courseId,Long creatorId);
+    List<LessonMaterialViewDTO> getMaterialByCourse(Long courseId);
 }

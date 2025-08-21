@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class LessonTimetableDTO {
+    private Long id;
     private String courseTitle;
     private String lecturerName;
     private String weekIndex;

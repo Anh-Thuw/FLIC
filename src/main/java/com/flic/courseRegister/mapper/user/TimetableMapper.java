@@ -15,6 +15,7 @@ public interface TimetableMapper {
 
 
 
+    @Mapping(target = "id", source = "id")
     @Mapping(target = "courseTitle", source = "course.title")
     @Mapping(target = "lecturerName", source = "course", qualifiedByName = "mapInstructorName")
     @Mapping(target = "weekIndex", source = "lesson", qualifiedByName = "mapWeekIndex")

@@ -39,7 +39,7 @@ public class LessonServiceImpl implements LessonService {
                 enrollment -> Attendance.builder()
                         .lesson(newLesson)
                         .enrollment(enrollment)
-                        .status(Attendance.Status.absent)
+                        .status(Attendance.Status.present)
                         .build()).toList();
         attendanceRepository.saveAll(attendanceList);
         return lessonMapper.toDto(newLesson);

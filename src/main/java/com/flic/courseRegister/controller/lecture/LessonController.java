@@ -93,6 +93,7 @@ public class LessonController {
         List<LessonMaterialViewDTO> materials = lessonMaterialService.getMaterialByCourse(courseId);
         return ResponseEntity.ok(materials);
     }
+
     @PreAuthorize("hasAnyRole('STUDENT','USER','GUEST')")
     @GetMapping
     public ResponseEntity<?> getLessonByCourseId(@RequestParam Long courseId) {

@@ -1,15 +1,12 @@
 package com.flic.courseRegister.controller.admin;
 
-import com.flic.courseRegister.dto.admin.NewsDTO;
 import com.flic.courseRegister.dto.admin.PaymentDTO;
 import com.flic.courseRegister.service.admin.PaymentService;
 import com.flic.courseRegister.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
@@ -42,6 +39,16 @@ public class PaymentController {
                     null
             );
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<PaymentDTO>> detailPayment(@PathVariable Long id) {
+        try {
+            PaymentDTO paymentDTO = paymentService.detailPayment(id);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Lấy chi tiết bài viết thành công", paymentDTO));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Không tìm thấy bài viết với id: " + id, null));
         }
     }
 

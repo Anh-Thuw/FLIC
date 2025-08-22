@@ -148,7 +148,7 @@ public class AdminServiceImpl implements AdminService {
                     .image(imageUrl)
                     .startMonth(dto.getStartMonth())
                     .type(dto.getType())
-                    .status("draft")
+                    .status("active")
                     .rating(BigDecimal.ZERO)
                     .build();
 

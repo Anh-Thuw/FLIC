@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class CourseLecturerMapper {
     public CourseLecturerViewDTO toDto(Course course, User user){
         return CourseLecturerViewDTO.builder()
+                .id(course.getId())
                 .title(course.getTitle())
                 .lecturerInCharge(user.getFullName())
                 .description(course.getDescription())

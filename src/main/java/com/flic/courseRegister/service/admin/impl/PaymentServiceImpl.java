@@ -4,6 +4,7 @@ import com.flic.courseRegister.dto.admin.CourseAdminViewDTO;
 import com.flic.courseRegister.dto.admin.PaymentDTO;
 import com.flic.courseRegister.dto.user.EnrollmentResponse;
 import com.flic.courseRegister.dto.user.UserProfileDTO;
+import com.flic.courseRegister.entity.NewsArticle;
 import com.flic.courseRegister.entity.Payment;
 import com.flic.courseRegister.entity.User;
 import com.flic.courseRegister.mapper.admin.PaymentMapper;
@@ -73,6 +74,12 @@ public class PaymentServiceImpl implements PaymentService {
 
         return paymentMapper.toDto(saved);
     }
+
+    @Override
+    public PaymentDTO detailPayment(Long id) {
+        Payment payment = paymentRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("NewsArticle not found with id: " + id));
+        return paymentMapper.toDto(payment);       }
 
 
 }

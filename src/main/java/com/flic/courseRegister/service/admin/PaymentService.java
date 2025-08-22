@@ -8,4 +8,6 @@ public interface PaymentService {
     public List<PaymentDTO> getAllPayments() ;
 
     PaymentDTO updateStatus(Long id, PaymentDTO dto);
+
+    PaymentDTO detailPayment(Long id);
 }

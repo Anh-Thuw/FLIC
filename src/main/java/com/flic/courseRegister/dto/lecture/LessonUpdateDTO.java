@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 public class LessonUpdateDTO {
    private String title;
-   private String description;g
+   private String description;
    private Integer weekIndex ;
    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm")

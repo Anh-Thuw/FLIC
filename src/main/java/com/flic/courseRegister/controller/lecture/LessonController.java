@@ -94,7 +94,6 @@ public class LessonController {
         return ResponseEntity.ok(materials);
     }
 
-    @PreAuthorize("hasAnyRole('STUDENT','USER','GUEST')")
     @GetMapping
     public ResponseEntity<?> getLessonByCourseId(@RequestParam Long courseId) {
         List<LessonViewDTO> lesson = lessonService.getLessonByCourseId(courseId);

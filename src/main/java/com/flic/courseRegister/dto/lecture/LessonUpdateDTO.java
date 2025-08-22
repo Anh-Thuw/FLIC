@@ -5,14 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class LessonUpdateDTO {
-   private Long lessonId;
-   private Long lecturerId;
-   private String updateTitle;
-   private String updateDescription;
-   private String note;
+   private String title;
+   private String description;
+   private Integer weekIndex ;
+   private LocalDateTime plannedAt;
+   private LocalDateTime endTime;
 }

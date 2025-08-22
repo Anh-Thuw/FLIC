@@ -7,6 +7,7 @@ import com.flic.courseRegister.entity.*;
 import com.flic.courseRegister.mapper.lecture.LessonMapper;
 import com.flic.courseRegister.repository.*;
 import com.flic.courseRegister.service.lecture.LessonService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -46,21 +47,28 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public LessonUpdateDTO updateLesson(LessonUpdateDTO lessonUpdateDTO, String email) {
-        Lesson lesson = lessonRepository.findById(lessonUpdateDTO.getLessonId())
-                .orElseThrow(()-> new RuntimeException("Không tìm thấy buổi học"));
+    public LessonViewDTO updateLesson(LessonUpdateDTO dto, Long lessonId) {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new RuntimeException("Lesson with id " + lessonId + " not found"));
 
-        User editor = userRepository.findByEmail(email)
-                .orElseThrow(()-> new RuntimeException("Không thấy giảng viên"));
-        if (lesson.getCreatorId() == null) {
-            throw new RuntimeException("Buổi học chưa có người tạo (creatorId bị null)");
+        // cập nhật các trường từ DTO
+        if (dto.getTitle() != null) {
+            lesson.setTitle(dto.getTitle());
         }
-        if(!lesson.getCreatorId().getId().equals(editor.getId())){
-            throw new RuntimeException("Không có quyền truy cập buổi học này");
+        if (dto.getDescription() != null) {
+            lesson.setDescription(dto.getDescription());
         }
-        LessonRevision revision = lessonMapper.updateEntity(lesson, lessonUpdateDTO, editor);
-        lessonRevisionRepository.save(revision);
-        return lessonMapper.toEntityRevision(revision);
+        if (dto.getWeekIndex() != null) {
+            lesson.setWeekIndex(dto.getWeekIndex());
+        }
+        if (dto.getPlannedAt() != null) {
+            lesson.setPlannedAt(dto.getPlannedAt());
+        }
+        if (dto.getEndTime() != null) {
+            lesson.setEndTime(dto.getEndTime());
+        }
+        Lesson saved = lessonRepository.save(lesson);
+        return lessonMapper.toDto(saved);
     }
 
     @Override
@@ -70,4 +78,16 @@ public class LessonServiceImpl implements LessonService {
                 .map(lessonMapper::toDto)
                 .collect(Collectors.toList());
     }
-}
+
+    @Override
+    @Transactional
+    public void deleteLesson(Long lessonId) {
+        if (!lessonRepository.existsById(lessonId)) {
+            throw new RuntimeException("Lesson with id " + lessonId + " not found");
+        }
+        // Xóa hết attendance của lesson này
+        attendanceRepository.deleteByLessonId(lessonId);
+        lessonRepository.deleteById(lessonId);
+    }
+    }
+

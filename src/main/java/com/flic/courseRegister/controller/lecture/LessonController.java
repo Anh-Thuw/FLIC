@@ -43,12 +43,12 @@ public class LessonController {
         }
     }
     @PreAuthorize("hasRole('INSTRUCTOR')")
-    @PostMapping("/update")
-    public ResponseEntity<Map<String, Object>> updateLesson(@RequestBody LessonUpdateDTO dto, Authentication authentication){
+    @PutMapping("/update")
+    public ResponseEntity<Map<String, Object>> updateLesson(@RequestBody LessonUpdateDTO dto,@RequestParam Long lessonId){
         Map<String, Object> response = new HashMap<>();
         try {
-            String email = authentication.getName();
-            LessonUpdateDTO result = lessonService.updateLesson(dto,email);
+
+            LessonViewDTO result = lessonService.updateLesson(dto,lessonId);
             response.put("message", "Cập nhật buổi học thành công");
             response.put("data", result);
             return ResponseEntity.ok(response);
@@ -98,6 +98,17 @@ public class LessonController {
     public ResponseEntity<?> getLessonByCourseId(@RequestParam Long courseId) {
         List<LessonViewDTO> lesson = lessonService.getLessonByCourseId(courseId);
         return ResponseEntity.ok(lesson);
+    }
+    @PreAuthorize("hasRole('INSTRUCTOR')")
+    //xóa lesson theo id
+    @DeleteMapping()
+    public ResponseEntity<String> deleteLesson(@RequestParam Long lessonId) {
+        try {
+            lessonService.deleteLesson(lessonId);
+            return ResponseEntity.ok("Lesson deleted successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
 }

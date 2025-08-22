@@ -32,22 +32,6 @@ public class LessonMapper {
                 .endTime(lesson.getEndTime())
                 .build();
     }
-    public LessonRevision updateEntity(Lesson lesson, LessonUpdateDTO dto, User editor) {
-        return LessonRevision.builder()
-                .lesson(lesson)
-                .instructor(editor)
-                .updatedTitle(dto.getUpdateTitle())
-                .updatedDescription(dto.getUpdateDescription())
-                .note(dto.getNote())
-                .build();
-    }
-    public LessonUpdateDTO toEntityRevision(LessonRevision lessonRevision){
-        return LessonUpdateDTO.builder()
-                .lessonId(lessonRevision.getLesson().getId())
-                .lecturerId(lessonRevision.getInstructor().getId())
-                .updateTitle(lessonRevision.getUpdatedTitle())
-                .updateDescription(lessonRevision.getUpdatedDescription())
-                .note(lessonRevision.getNote())
-                .build();
-    }
+
+
 }

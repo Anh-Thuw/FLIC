@@ -141,6 +141,19 @@ public class UserServiceImpl implements UserService {
         return userForm;
     }
 
+    @Override
+    public void changePassword(String email, ChangePasswordDTO dto) {
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("Khong tim thay nguoi dung"));
+        if (!passwordEncoder.matches(dto.getOldPassword(), user.getPasswordHash())) {
+            throw new RuntimeException("Mật khẩu cũ không đúng");
+        }
+        if(!dto.getNewPassword().equals(dto.getNewPasswordConfirm())){
+            throw new RuntimeException("Mật khẩu không khớp");
+        }
+        user.setPasswordHash(passwordEncoder.encode(dto.getNewPassword()));
+        userRepository.save(user);
+    }
+
     private String getCurrentEmail() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName();

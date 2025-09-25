@@ -1,6 +1,7 @@
 package com.flic.courseRegister.controller.admin;
 
 import com.flic.courseRegister.dto.admin.PaymentDTO;
+import com.flic.courseRegister.dto.admin.UpdateStatusPaymentDTO;
 import com.flic.courseRegister.service.admin.PaymentService;
 import com.flic.courseRegister.util.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,8 @@ public class PaymentController {
         return ResponseEntity.ok(payments);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<PaymentDTO>> updatePayment(@PathVariable Long id,@RequestBody PaymentDTO dto) {
+    public ResponseEntity<ApiResponse<PaymentDTO>> updatePayment(@PathVariable Long id,
+                                                                 @RequestBody UpdateStatusPaymentDTO dto) {
         try {
             PaymentDTO updated = paymentService.updateStatus(id, dto);
             ApiResponse<PaymentDTO> response = new ApiResponse<>(

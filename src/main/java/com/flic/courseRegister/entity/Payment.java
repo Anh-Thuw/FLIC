@@ -18,8 +18,9 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "enrollment_id")
-    private Long enrolmentId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "enrollment_id", referencedColumnName = "id")
+    private Enrollment enrollment;
 
     @Column(name = "amount")
     private BigDecimal amount;
@@ -27,8 +28,9 @@ public class Payment {
     @Column(name = "method")
     private String paymentMethod;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String paymentStatus;
+    private StatusPayment paymentStatus;
 
     @Column(name ="bill_image")
     private String billImage;
@@ -63,6 +65,9 @@ public class Payment {
     public enum PaymentFor {
         course,
         exam
+    }
+    public enum StatusPayment {
+        PENDING, COMPLETED
     }
 }
 

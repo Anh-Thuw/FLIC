@@ -14,5 +14,7 @@ public interface UserService {
     void updateAttachment(AttachmentUpdateDTO dto);
 
     UserFormViewDTO getUserFormView();
+
+    void changePassword(String email,ChangePasswordDTO changePasswordDTO);
 }
 

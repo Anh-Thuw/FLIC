@@ -2,8 +2,10 @@ package com.flic.courseRegister.service.admin.impl;
 
 import com.flic.courseRegister.dto.admin.CourseAdminViewDTO;
 import com.flic.courseRegister.dto.admin.PaymentDTO;
+import com.flic.courseRegister.dto.admin.UpdateStatusPaymentDTO;
 import com.flic.courseRegister.dto.user.EnrollmentResponse;
 import com.flic.courseRegister.dto.user.UserProfileDTO;
+import com.flic.courseRegister.entity.Enrollment;
 import com.flic.courseRegister.entity.NewsArticle;
 import com.flic.courseRegister.entity.Payment;
 import com.flic.courseRegister.entity.User;
@@ -15,8 +17,10 @@ import com.flic.courseRegister.service.admin.EnrollmentAdminService;
 import com.flic.courseRegister.service.admin.PaymentService;
 import com.flic.courseRegister.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +35,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final UserService               userService;
     private final UserRepository            userRepo;
     private final AdminService              courseService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<PaymentDTO> getAllPayments() {
@@ -40,8 +45,8 @@ public class PaymentServiceImpl implements PaymentService {
                     // Map entity -> DTO
                     PaymentDTO dto = paymentMapper.toDto(payment);
 
-                    if (payment.getEnrolmentId() != null) {
-                        EnrollmentResponse enrollmentInfo = enrollmentAdminService.getEnrollmentById(payment.getEnrolmentId());
+                    if (payment.getEnrollment() != null) {
+                        EnrollmentResponse enrollmentInfo = enrollmentAdminService.getEnrollmentById(payment.getEnrollment().getId());
                         dto.setEnrollment(enrollmentInfo);
 
                         // Lấy student info từ enrollment
@@ -62,7 +67,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentDTO updateStatus(Long id, PaymentDTO dto) {
+    public PaymentDTO updateStatus(Long id, UpdateStatusPaymentDTO dto) {
         Payment payment = paymentRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Payment not found with id: " + id));
         if (dto.getStatus() != null) {
@@ -71,6 +76,24 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setUpdatedAt(LocalDateTime.now());
 
         Payment saved = paymentRepo.save(payment);
+
+        // Lấy user qua enrollment
+        Enrollment enrollment = payment.getEnrollment();
+        User user = enrollment.getUser();
+
+
+        if ((user.getPasswordHash() == null || user.getPasswordHash().isBlank())
+                && user.getBirthDate() != null) {
+
+                LocalDate birthDate = user.getBirthDate();
+                String rawPassword = String.format("%02d%02d%04d",
+                        birthDate.getDayOfMonth(),
+                        birthDate.getMonthValue(),
+                        birthDate.getYear());
+                user.setPasswordHash(passwordEncoder.encode(rawPassword));
+        }
+        user.setRole("STUDENT");
+        User updateRole = userRepo.save(user);
 
         return paymentMapper.toDto(saved);
     }

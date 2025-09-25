@@ -91,12 +91,14 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         }
 
         Payment payment = Payment.builder()
-                .enrolmentId(enrollment.getId())  // gán id enrollment (Long)
+                .enrollment(enrollment)  // gán id enrollment (Long)
                 .amount(request.getAmount())
                 .paymentMethod(request.getPaymentMethod())
                 .billImage(billImageUrl)
                 .notePayment(request.getNote())
-                .paymentStatus(request.getPaymentStatus() != null ? request.getPaymentStatus() : "pending")
+                .paymentStatus(request.getPaymentStatus() != null
+                        ? request.getPaymentStatus()
+                        : Payment.StatusPayment.PENDING)
                 .paidAt(request.getPaidAt() != null ? LocalDateTime.parse(request.getPaidAt()) : null)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
@@ -162,12 +164,14 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         // 4. Tạo Payment record sử dụng enrolmentId thay vì Enrollment entity
         Payment payment = Payment.builder()
-                .enrolmentId(enrollment.getId())  // gán id enrollment (Long)
+                .enrollment(enrollment)  // gán id enrollment (Long)
                 .amount(req.getAmount())
                 .paymentMethod(req.getPaymentMethod())
                 .billImage(billImageUrl)
                 .notePayment(req.getNote())
-                .paymentStatus(req.getPaymentStatus() != null ? req.getPaymentStatus() : "pending")
+                .paymentStatus(req.getPaymentStatus() != null
+                        ? req.getPaymentStatus()
+                        : Payment.StatusPayment.PENDING)
                 .paidAt(req.getPaidAt() != null ? LocalDateTime.parse(req.getPaidAt()) : null)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())

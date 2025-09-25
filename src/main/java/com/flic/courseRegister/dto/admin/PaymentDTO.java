@@ -2,6 +2,7 @@ package com.flic.courseRegister.dto.admin;
 
 import com.flic.courseRegister.dto.user.EnrollmentResponse;
 import com.flic.courseRegister.dto.user.UserProfileDTO;
+import com.flic.courseRegister.entity.Payment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class PaymentDTO {
     private BigDecimal          amount;
     private String              method;
     private String              billImage;
-    private String              status;
+    private Payment.StatusPayment status;
     private String              note;
     private String              paymentFor; // hoặc Enum nếu bạn dùng PaymentFor enum
     private LocalDateTime       createdAt;

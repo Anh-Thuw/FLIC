@@ -1,10 +1,7 @@
 package com.flic.courseRegister.controller.user;
 
 import com.flic.courseRegister.dto.ImageUploadResult;
-import com.flic.courseRegister.dto.user.AttachmentUpdateDTO;
-import com.flic.courseRegister.dto.user.UserFormViewDTO;
-import com.flic.courseRegister.dto.user.UserProfileDTO;
-import com.flic.courseRegister.dto.user.UserProfileUpdateRequestDTO;
+import com.flic.courseRegister.dto.user.*;
 import com.flic.courseRegister.security.UserDetailsImpl;
 import com.flic.courseRegister.service.user.UserProfileService;
 import com.flic.courseRegister.service.user.UserService;
@@ -59,6 +56,17 @@ public class UserController {
         } catch (Exception e) {
             System.err.println("[UserProfileController] upload error: " + e.getMessage());
             return ResponseEntity.status(500).build();
+        }
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDTO dto, Authentication authentication){
+        try {
+            String email = authentication.getName();
+            userService.changePassword(email, dto);
+            return ResponseEntity.ok("Thay đổi mật khẩu thành công");
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

@@ -13,6 +13,8 @@ public interface UserMapper {
 
     UserFormViewDTO toUserFormViewDto(User user);
 
+    User toEntity(ChangePasswordDTO changePasswordDTO);
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateUserFromDto(UserProfileUpdateRequestDTO dto, @MappingTarget User user);
 

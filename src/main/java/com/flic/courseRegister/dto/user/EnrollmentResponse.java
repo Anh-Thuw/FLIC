@@ -1,5 +1,6 @@
 package com.flic.courseRegister.dto.user;
 
+import com.flic.courseRegister.entity.Payment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,6 @@ public class EnrollmentResponse {
     private Long enrollmentId; // ⬅ bổ sung
     private Long paymentId;    // ⬅ bổ sung
     private String enrollmentStatus;  // trạng thái enrollment, ví dụ "PENDING", "CONFIRMED", "CANCELLED"
-    private String paymentStatus;
+    private Payment.StatusPayment paymentStatus;
     private String paymentFor;// trạng thái thanh toán, ví dụ "pending", "completed", "failed"
 }

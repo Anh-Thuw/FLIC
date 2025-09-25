@@ -1,5 +1,6 @@
 package com.flic.courseRegister.dto.user;
 
+import com.flic.courseRegister.entity.Payment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,7 +31,7 @@ public class EnrollmentRequest {
     private String paymentMethod;
     private BigDecimal amount;
     private String billImage;
-    private String paymentStatus;   // tương ứng payment_status (nên nhận client cung cấp hoặc set default)
+    private Payment.StatusPayment paymentStatus;   // tương ứng payment_status (nên nhận client cung cấp hoặc set default)
     private String paidAt;          // Có thể truyền ngày hoặc set null, dạng yyyy-MM-dd'T'HH:mm:ss
     private String note;
     private String paymentFor;

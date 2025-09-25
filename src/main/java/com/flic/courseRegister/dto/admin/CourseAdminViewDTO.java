@@ -21,4 +21,6 @@ public class CourseAdminViewDTO {
     private Course.CourseType type;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String nameLecturer;
+    private String emailLecturer;
 }

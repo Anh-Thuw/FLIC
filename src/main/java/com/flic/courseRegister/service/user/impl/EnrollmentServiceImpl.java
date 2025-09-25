@@ -133,7 +133,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 .idNumber(req.getIdNumber())
                 .idIssuedPlace(req.getIdIssuedPlace())
                 .idIssuedDate(req.getIdIssuedDate() != null ? LocalDate.parse(req.getIdIssuedDate()) : null)
-                .role("guest")
+                .role("USER")
                 .status("active")
                 .build();
         user = userRepository.save(user);

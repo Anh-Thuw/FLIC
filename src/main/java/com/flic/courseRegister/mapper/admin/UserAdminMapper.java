@@ -1,5 +1,6 @@
 package com.flic.courseRegister.mapper.admin;
 
+import com.flic.courseRegister.dto.admin.InstructorToCourseDTO;
 import com.flic.courseRegister.dto.admin.UserAdminViewDTO;
 import com.flic.courseRegister.entity.User;
 import org.springframework.stereotype.Component;
@@ -28,4 +29,5 @@ public class UserAdminMapper {
                 .createdAt(user.getCreatedAt())
                 .build();
     }
+
 }

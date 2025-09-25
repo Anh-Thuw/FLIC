@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
         user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
         user.setRole("USER");
-
+        user.setStatus("active");
         User savedUser = userRepository.save(user);
         System.out.println("[DEBUG] User sau khi save vào DB: " + savedUser);
 

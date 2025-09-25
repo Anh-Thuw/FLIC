@@ -3,14 +3,17 @@ package com.flic.courseRegister.controller.admin;
 import com.flic.courseRegister.dto.admin.*;
 import com.flic.courseRegister.dto.user.UserCreateDTO;
 import com.flic.courseRegister.dto.user.UserUpdateDTO;
+import com.flic.courseRegister.dto.user.UserViewDTO;
 import com.flic.courseRegister.entity.Course;
 import com.flic.courseRegister.service.admin.AdminService;
+import com.flic.courseRegister.util.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,31 +29,44 @@ public class AdminController {
 
     private final AdminService service;
 
-    // Lấy danh sách tất cả user
     @GetMapping("/users")
-    public ResponseEntity<Page<UserAdminViewDTO>> getUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
+    public ResponseEntity<List<UserAdminViewDTO>> getUsers(
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String role,
             @RequestParam(required = false) String keyword) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        return ResponseEntity.ok(service.getAllUsers(pageable, status, role, keyword));
+        return ResponseEntity.ok(service.getAllUsers(status, role, keyword));
     }
 
     // Lấy danh sách giảng viên
     @GetMapping("/lecturers")
-    public ResponseEntity<Page<UserAdminViewDTO>> getTeachers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
+    public ResponseEntity<List<UserAdminViewDTO>> getTeachers(
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String keyword) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        return ResponseEntity.ok(service.getAllTeachers(pageable, status, keyword));
+        return ResponseEntity.ok(service.getAllTeachers( status, keyword));
     }
-
+    @PostMapping("/registerAccount")
+    public ResponseEntity<ApiResponse<UserViewDTO>> createNewAccountRole(
+            @RequestBody UserByRoleDTO userByRoleDTO
+    ) {
+        try {
+            UserViewDTO newUser = service.createNewAccountRole(userByRoleDTO);
+            ApiResponse<UserViewDTO> response = new ApiResponse<>(
+                    true,
+                    "Tạo mới tài khoản thành công!",
+                    newUser
+            );
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException ex) {
+            ApiResponse<UserViewDTO> response = new ApiResponse<>(
+                    false,
+                    "Tạo mới tài khoản thất bại: " + ex.getMessage(),
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
     @GetMapping("/users/{id}")
     public ResponseEntity<UserAdminViewDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getUserById(id));
@@ -132,5 +148,17 @@ public class AdminController {
     public ResponseEntity<ApiMessage> deleteCourse(@PathVariable Long id) {
         service.deleteCourse(id);
         return ResponseEntity.ok(new ApiMessage("Xoá khoá học thành công"));
+    }
+    //Gán giảng viên vào khóa học
+    @PostMapping("/course-to-instructor")
+    public ResponseEntity<ApiMessage> assignInstructorToCourse(@RequestBody InstructorToCourseDTO instructorToCourseDTO){
+        try{
+        service.assignInstructorToCourse(instructorToCourseDTO);
+        return ResponseEntity.ok((new ApiMessage("Gán giảng viên vào khóa học thành công")));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(new ApiMessage(e.getMessage()));
+        }
+
+
     }
 }

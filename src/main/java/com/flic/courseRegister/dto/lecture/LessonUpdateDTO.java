@@ -17,10 +17,10 @@ public class LessonUpdateDTO {
    private String title;
    private String description;
    private Integer weekIndex ;
-   @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
-   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm")
+   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
    private LocalDateTime plannedAt;
-   @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
-   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm")
+   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
    private LocalDateTime endTime;
 }

@@ -1,21 +1,14 @@
 package com.flic.courseRegister.service.admin.impl;
 
-import com.flic.courseRegister.dto.admin.CourseAdminViewDTO;
-import com.flic.courseRegister.dto.admin.CourseCreateDTO;
-import com.flic.courseRegister.dto.admin.CourseUpdateDTO;
-import com.flic.courseRegister.dto.admin.UserAdminViewDTO;
+import com.flic.courseRegister.dto.admin.*;
 import com.flic.courseRegister.dto.user.UserCreateDTO;
 import com.flic.courseRegister.dto.user.UserUpdateDTO;
+import com.flic.courseRegister.dto.user.UserViewDTO;
 import com.flic.courseRegister.entity.Course;
+import com.flic.courseRegister.entity.CourseInstructor;
 import com.flic.courseRegister.entity.User;
-import com.flic.courseRegister.mapper.admin.CourseAdminMapper;
-import com.flic.courseRegister.mapper.admin.CourseCreateMapper;
-import com.flic.courseRegister.mapper.admin.UserAdminMapper;
-import com.flic.courseRegister.mapper.admin.UserCreateMapper;
-import com.flic.courseRegister.repository.CourseRepository;
-import com.flic.courseRegister.repository.EnrollmentRepository;
-import com.flic.courseRegister.repository.PaymentRepository;
-import com.flic.courseRegister.repository.UserRepository;
+import com.flic.courseRegister.mapper.admin.*;
+import com.flic.courseRegister.repository.*;
 import com.flic.courseRegister.service.ImageUploadService;
 import com.flic.courseRegister.service.admin.AdminService;
 import jakarta.persistence.EntityManager;
@@ -23,11 +16,13 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,12 +37,17 @@ public class AdminServiceImpl implements AdminService {
     private final CourseAdminMapper courseMapper;
     private final CourseCreateMapper createMapper;
     private final ImageUploadService imageUploadService;
+    private final PasswordEncoder passwordEncoder;
+    private final CourseInstructorRepository courseInstructorRepository;
+    private final InstructorToCourseMapper instructorToCourseMapper;
 
     //  USER METHODS
     @Override
-    public Page<UserAdminViewDTO> getAllUsers(Pageable pageable, String status, String role, String keyword) {
-        Page<User> users = userRepo.findWithFilters(keyword, status, role, pageable);
-        return users.map(userMapper::toDto);
+    public List<UserAdminViewDTO> getAllUsers(String status, String role, String keyword) {
+        List<User> users = userRepo.findWithFilters(keyword, status, role);
+        return users.stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -199,10 +199,42 @@ public class AdminServiceImpl implements AdminService {
 
     //    xem ds gv
     @Override
-    public Page<UserAdminViewDTO> getAllTeachers(Pageable pageable, String status, String keyword) {
+    public List<UserAdminViewDTO> getAllTeachers( String status, String keyword) {
         // Tái sử dụng findWithFilters và cố định role = "lecturer"
-        Page<User> teachers = userRepo.findWithFilters(keyword, status, "lecturer", pageable);
-        return teachers.map(userMapper::toDto);
+        List<User> teachers = userRepo.findWithFilters(keyword, status, "INSTRUCTOR");
+        return teachers.stream()
+                .map(userMapper::toDto)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public UserViewDTO createNewAccountRole(UserByRoleDTO userByRoleDTO) {
+        if(userRepo.findByEmail(userByRoleDTO.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+        User user1 = new User();
+        user1.setPasswordHash(passwordEncoder.encode(userByRoleDTO.getPassword()));
+        user1.setRole(userByRoleDTO.getRole());
+        user1.setEmail(userByRoleDTO.getEmail());
+        user1.setFullName(userByRoleDTO.getFullName());
+        user1.setStatus("active");
+        User user2 = userRepo.save(user1);
+        return UserViewDTO.builder()
+                .id(user2.getId())
+                .email(user2.getEmail())
+                .fullName(user2.getFullName())
+                .role(user2.getRole())
+                .build();
+    }
+    @Override
+    public void assignInstructorToCourse(InstructorToCourseDTO instructorToCourseDTO) {
+        User user = userRepo.findById(instructorToCourseDTO.getIdUser()).orElseThrow(()-> new RuntimeException("Khong tim thay giang vien"));
+        Course course = courseRepo.findById(instructorToCourseDTO.getIdCourse()).orElseThrow(()-> new RuntimeException("Khong tim thay khoa hoc"));
+        if (courseInstructorRepository.existsByUserAndCourse(user, course)) {
+            throw new RuntimeException("Giảng viên đã được gán vào khóa học rồi");
+        }
+        CourseInstructor courseInstructor = instructorToCourseMapper.toEntity(user,course);
+        courseInstructor.setAssignedAt(LocalDateTime.now());
+        courseInstructorRepository.save(courseInstructor);
     }
 
 }

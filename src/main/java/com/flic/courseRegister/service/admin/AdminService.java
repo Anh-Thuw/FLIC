@@ -1,11 +1,9 @@
 package com.flic.courseRegister.service.admin;
 
-import com.flic.courseRegister.dto.admin.CourseAdminViewDTO;
-import com.flic.courseRegister.dto.admin.CourseCreateDTO;
-import com.flic.courseRegister.dto.admin.CourseUpdateDTO;
-import com.flic.courseRegister.dto.admin.UserAdminViewDTO;
+import com.flic.courseRegister.dto.admin.*;
 import com.flic.courseRegister.dto.user.UserCreateDTO;
 import com.flic.courseRegister.dto.user.UserUpdateDTO;
+import com.flic.courseRegister.dto.user.UserViewDTO;
 import com.flic.courseRegister.entity.Course;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,13 +19,15 @@ public interface AdminService {
     void updateCourse(Long id, CourseUpdateDTO dto);
     void deleteCourse(Long id);
 
-    // Updated user methods
-    Page<UserAdminViewDTO> getAllUsers(Pageable pageable, String status, String role, String keyword);
+    List<UserAdminViewDTO> getAllUsers(String status, String role, String keyword);
+
+    List<UserAdminViewDTO> getAllTeachers(String status, String keyword);
+
+    UserViewDTO createNewAccountRole (UserByRoleDTO userByRoleDTO);
     Long createUser(UserCreateDTO dto);
     void updateUser(Long id, UserUpdateDTO dto);
     void deleteUser(Long id);
     UserAdminViewDTO getUserById(Long id);
-
-    Page<UserAdminViewDTO> getAllTeachers(Pageable pageable, String status, String keyword);
+    void assignInstructorToCourse(InstructorToCourseDTO instructorToCourseDTO);
 }
 

@@ -1,16 +1,23 @@
 package com.flic.courseRegister.mapper.admin;
 
+import com.flic.courseRegister.dto.admin.CourseAdminViewDTO;
 import com.flic.courseRegister.dto.admin.PaymentDTO;
+import com.flic.courseRegister.dto.user.EnrollmentResponse;
+import com.flic.courseRegister.dto.user.UserProfileDTO;
 import com.flic.courseRegister.entity.Enrollment;
 import com.flic.courseRegister.entity.Payment;
+import com.flic.courseRegister.mapper.user.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class PaymentMapper {
+    private final CourseAdminMapper courseMapper;
+    private final UserMapper userMapper;
 
     public PaymentDTO toDto(Payment payment) {
+        Enrollment enrollment = payment.getEnrollment();
         if (payment == null) return null;
         return PaymentDTO.builder()
                 .id(payment.getId())
@@ -20,9 +27,16 @@ public class PaymentMapper {
                 .billImage(payment.getBillImage())
                 .status(payment.getPaymentStatus())
                 .note(payment.getNotePayment())
+                .enrollmentId(payment.getEnrollment().getId())
                 .paymentFor(payment.getPaymentFor() != null ? payment.getPaymentFor().name() : null)
                 .createdAt(payment.getCreatedAt())
                 .updatedAt(payment.getUpdatedAt())
+                .student(enrollment != null && enrollment.getUser() != null
+                        ? userMapper.toUserProfileDto(enrollment.getUser())
+                        : null)
+                .course(enrollment != null && enrollment.getCourse() != null
+                        ? courseMapper.toDto(enrollment.getCourse())
+                        : null)
                 .build();
     }
     public Payment toEntity(PaymentDTO dto) {

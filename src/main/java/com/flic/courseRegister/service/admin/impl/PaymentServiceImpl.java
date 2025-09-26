@@ -5,11 +5,9 @@ import com.flic.courseRegister.dto.admin.PaymentDTO;
 import com.flic.courseRegister.dto.admin.UpdateStatusPaymentDTO;
 import com.flic.courseRegister.dto.user.EnrollmentResponse;
 import com.flic.courseRegister.dto.user.UserProfileDTO;
-import com.flic.courseRegister.entity.Enrollment;
-import com.flic.courseRegister.entity.NewsArticle;
-import com.flic.courseRegister.entity.Payment;
-import com.flic.courseRegister.entity.User;
+import com.flic.courseRegister.entity.*;
 import com.flic.courseRegister.mapper.admin.PaymentMapper;
+import com.flic.courseRegister.repository.EnrollmentRepository;
 import com.flic.courseRegister.repository.PaymentRepository;
 import com.flic.courseRegister.repository.UserRepository;
 import com.flic.courseRegister.service.admin.AdminService;
@@ -36,6 +34,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final UserRepository            userRepo;
     private final AdminService              courseService;
     private final PasswordEncoder passwordEncoder;
+    private final EnrollmentRepository enrollmentRepository;
 
     @Override
     public List<PaymentDTO> getAllPayments() {
@@ -92,6 +91,8 @@ public class PaymentServiceImpl implements PaymentService {
                         birthDate.getYear());
                 user.setPasswordHash(passwordEncoder.encode(rawPassword));
         }
+        enrollment.setStatus(EnrollmentStatus.IN_PROGRESS);
+        enrollmentRepository.save(enrollment);
         user.setRole("STUDENT");
         User updateRole = userRepo.save(user);
 

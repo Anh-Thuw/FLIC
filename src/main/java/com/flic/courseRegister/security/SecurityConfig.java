@@ -41,7 +41,7 @@ public class    SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // Cho phép frontend từ domain cụ thể gọi API
-        config.setAllowedOrigins(List.of("http://127.0.0.1:5500")); // team FE sau này thay ip fe vào để dùng API
+        config.setAllowedOrigins(List.of("http://localhost:5173/")); // team FE sau này thay ip fe vào để dùng API
 
         // Cho phép các HTTP method
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

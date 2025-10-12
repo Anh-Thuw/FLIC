@@ -1,5 +1,6 @@
 package com.flic.courseRegister.service.user.impl;
 
+import com.flic.courseRegister.config.MultiDbManager;
 import com.flic.courseRegister.dto.user.*;
 import com.flic.courseRegister.entity.AttachmentType;
 import com.flic.courseRegister.entity.User;
@@ -10,11 +11,15 @@ import com.flic.courseRegister.repository.UserAttachmentRepository;
 import com.flic.courseRegister.repository.UserRepository;
 import com.flic.courseRegister.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 @Service
@@ -25,6 +30,18 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper mapper;
     private final UserAttachmentRepository  userAttachmentRepository;
+
+//    private JdbcTemplate db1JdbcTemplate = new JdbcTemplate(
+//            DataSourceBuilder.create()
+//                    .url("jdbc:mysql://trolley.proxy.rlwy.net:16442/railway?useSSL=false&serverTimezone=UTC")
+//                    .username("root")
+//                    .password("eKFRFTCgDfhvuEjjKaJcvdtJinnGwsku")
+//                    .driverClassName("com.mysql.cj.jdbc.Driver")
+//                    .build()
+//    );
+
+    private final MultiDbManager multiDbManager = new MultiDbManager();
+
 
     @Override
     public UserProfileDTO getUserById(Long userId) {
@@ -50,6 +67,7 @@ public class UserServiceImpl implements UserService {
         return dto;
     }
 
+    @Transactional
         @Override
     public UserViewDTO register(UserRegisterRequestDTO dto) {
         System.out.println("[DEBUG] DTO nhận từ client: " + dto);
@@ -66,6 +84,21 @@ public class UserServiceImpl implements UserService {
         user.setStatus("active");
         User savedUser = userRepository.save(user);
         System.out.println("[DEBUG] User sau khi save vào DB: " + savedUser);
+
+
+        //loop
+        String sql = "INSERT INTO users (email, password_hash, role, status, created_at) VALUES (?, ?, ?, ?, ?)";
+        for (String dbName : multiDbManager.getAllDbNames()) {
+            multiDbManager.getJdbcTemplate(dbName).update(
+                    sql,
+                    savedUser.getEmail(),
+                    savedUser.getPasswordHash(),
+                    savedUser.getRole(),
+                    savedUser.getStatus(),
+                    savedUser.getCreatedAt()
+            );
+        }
+
 
         UserViewDTO result = mapper.toUserViewDto(savedUser);
         System.out.println("[DEBUG] DTO trả về client: " + result);

@@ -1,5 +1,6 @@
 package com.flic.courseRegister.service.admin.impl;
 
+import com.flic.courseRegister.config.MultiDbManager;
 import com.flic.courseRegister.dto.admin.*;
 import com.flic.courseRegister.dto.user.UserCreateDTO;
 import com.flic.courseRegister.dto.user.UserUpdateDTO;
@@ -40,6 +41,8 @@ public class AdminServiceImpl implements AdminService {
     private final PasswordEncoder passwordEncoder;
     private final CourseInstructorRepository courseInstructorRepository;
     private final InstructorToCourseMapper instructorToCourseMapper;
+
+    private final MultiDbManager multiDbManager = new MultiDbManager();
 
     //  USER METHODS
     @Override
@@ -125,6 +128,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     //Tạo khóa học
+    @Transactional
     @Override
     public Long createCourse(CourseCreateDTO dto) {
         try {
@@ -152,12 +156,37 @@ public class AdminServiceImpl implements AdminService {
                     .rating(BigDecimal.ZERO)
                     .build();
 
+            Course savedCourse = courseRepo.save(course);
+            // 4) Lưu đồng bộ vào các DB khác
+            String sql = "INSERT INTO courses (title, description, rating, price, duration, status, image, start_month, type, created_at, updated_at, schedule) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            for (String dbName : multiDbManager.getAllDbNames()) {
+                multiDbManager.getJdbcTemplate(dbName).update(
+                        sql,
+                        savedCourse.getTitle(),
+                        savedCourse.getDescription(),
+                        savedCourse.getRating(),
+                        savedCourse.getPrice(),
+                        savedCourse.getDuration(),
+                        savedCourse.getStatus(),
+                        savedCourse.getImage(),
+                        savedCourse.getStartMonth(),
+                        savedCourse.getType().toString(),
+                        savedCourse.getCreatedAt(),
+                        savedCourse.getUpdatedAt(),
+                        savedCourse.getSchedule()
+                );
+            }
+
             // 3) Lưu DB
-            return courseRepo.save(course).getId();
+            return savedCourse.getId();
+
 
         } catch (RuntimeException e) {
+            e.printStackTrace();
             throw e;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("Tạo khoá học (multipart) thất bại: " + e.getMessage(), e);
         }
     }
@@ -181,20 +210,47 @@ public class AdminServiceImpl implements AdminService {
     }
 
     //Update khóa hoc
+    @Transactional
     @Override
     public void updateCourse(Long id, CourseUpdateDTO dto) {
         Course course = courseRepo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Course not found"));
         createMapper.updateEntity(course, dto);
-        courseRepo.save(course);
+        Course updatedCourse= courseRepo.save(course);
+        String sql = "UPDATE courses SET title = ?, description = ?, rating = ?, price = ?, duration = ?, " +
+                "status = ?, image = ?, start_month = ?, type = ?, updated_at = ?, schedule = ? WHERE id = ?";
+
+        for (String dbName : multiDbManager.getAllDbNames()) {
+            multiDbManager.getJdbcTemplate(dbName).update(
+                    sql,
+                    updatedCourse.getTitle(),
+                    updatedCourse.getDescription(),
+                    updatedCourse.getRating(),
+                    updatedCourse.getPrice(),
+                    updatedCourse.getDuration(),
+                    updatedCourse.getStatus(),
+                    updatedCourse.getImage(),
+                    updatedCourse.getStartMonth(),
+                    updatedCourse.getType().toString(),
+                    updatedCourse.getUpdatedAt(),
+                    updatedCourse.getSchedule(),
+                    updatedCourse.getId() // dùng id để update đúng record
+            );
+        }
     }
 
     //Xóa khóa học
+    @Transactional
     @Override
     public void deleteCourse(Long id) {
         if (!courseRepo.existsById(id))
             throw new EntityNotFoundException("Course not found");
         courseRepo.deleteById(id);
+        // 3) Đồng bộ xóa sang các DB khác
+        String sql = "DELETE FROM courses WHERE id = ?";
+        for (String dbName : multiDbManager.getAllDbNames()) {
+            multiDbManager.getJdbcTemplate(dbName).update(sql, id);
+        }
     }
 
     //    xem ds gv

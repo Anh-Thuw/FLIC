@@ -6,6 +6,7 @@ import com.flic.courseRegister.dto.lecture.LessonViewDTO;
 import com.flic.courseRegister.entity.*;
 import com.flic.courseRegister.mapper.lecture.LessonMapper;
 import com.flic.courseRegister.repository.*;
+
 import com.flic.courseRegister.service.lecture.LessonService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LessonServiceImpl implements LessonService {
     private final LessonRepository lessonRepository;
+
+
     private final CourseRepository courseRepository;
+
+
     private final UserRepository userRepository;
+
+
     private final EnrollmentRepository enrollmentRepository;
+
+
     private final AttendanceRepository attendanceRepository;
+
+
     private final LessonMapper lessonMapper;
     private final LessonRevisionRepository lessonRevisionRepository;
     @Override

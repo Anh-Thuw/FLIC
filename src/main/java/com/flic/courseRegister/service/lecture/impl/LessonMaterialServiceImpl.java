@@ -12,6 +12,8 @@ import com.flic.courseRegister.service.MaterialFileService;
 import com.flic.courseRegister.security.UserDetailsImpl;
 import com.flic.courseRegister.service.lecture.LessonMaterialService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +30,10 @@ public class LessonMaterialServiceImpl implements LessonMaterialService {
     private final LessonRevisionRepository lessonRevisionRepository;
     private final LessonMaterialMapper lessonMaterialMapper;
     private final MaterialFileService materialFileService;
+
+    @Autowired
+    private JdbcTemplate db1JdbcTemplate; // DB1
+
     @Override
     public LessonMaterialViewDTO createMaterial(LessonMaterialCreateDTO dto, MultipartFile file) {
         Course course = courseRepository.findById(dto.getCourseId())
@@ -57,6 +63,20 @@ public class LessonMaterialServiceImpl implements LessonMaterialService {
                 .build();
 
         LessonMaterial saved = lessonMaterialRepository.save(material);
+
+        // 🔹 Lưu vào DB1 bằng JdbcTemplate
+        db1JdbcTemplate.update(
+                "INSERT INTO lesson_material (id, course_id, revision_id, title, type, file_url, uploaded_at, creator_id) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                saved.getId(),
+                saved.getCourse().getId(),
+                saved.getRevision() != null ? saved.getRevision().getId() : null,
+                saved.getTitle(),
+                saved.getType(),
+                saved.getFileUrl(),
+                saved.getUploadedAt(),
+                saved.getCreator().getId()
+        );
         return lessonMaterialMapper.toDto(saved);
     }
 

@@ -14,6 +14,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
+
 
 @Configuration
 @RequiredArgsConstructor
@@ -21,6 +23,8 @@ import java.util.List;
 public class    SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    @Value("${app.cors.allowed-origin}")
+    private String allowedOrigin;
 
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -36,15 +40,13 @@ public class    SecurityConfig {
 //        return http.build();
 //    }
 
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
         // Cho phép frontend từ domain cụ thể gọi API
-        config.setAllowedOrigins(List.of(
-                "http://localhost:5173",   // vẫn cho phép local dev
-                "https://flic-frontend-production.up.railway.app/" // domain FE sau deploy
-        )); // team FE sau này thay ip fe vào để dùng API
+        config.setAllowedOrigins(List.of(allowedOrigin));// team FE sau này thay ip fe vào để dùng API
 
         // Cho phép các HTTP method
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

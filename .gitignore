@@ -32,3 +32,4 @@ src/main/resources/application-dev.properties
 
 ### VS Code ###
 .vscode/
+.env

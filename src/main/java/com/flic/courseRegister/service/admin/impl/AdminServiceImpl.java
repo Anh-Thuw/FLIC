@@ -41,8 +41,7 @@ public class AdminServiceImpl implements AdminService {
     private final PasswordEncoder passwordEncoder;
     private final CourseInstructorRepository courseInstructorRepository;
     private final InstructorToCourseMapper instructorToCourseMapper;
-
-    private final MultiDbManager multiDbManager = new MultiDbManager();
+    private final MultiDbManager multiDbManager;
 
     //  USER METHODS
     @Override
@@ -67,6 +66,34 @@ public class AdminServiceImpl implements AdminService {
 
         User user = userCreateMapper.toEntity(dto);
         User saved = userRepo.save(user);
+        
+        String sql = """
+        INSERT INTO users
+        (id, email, password_hash, full_name, phone, birth_date, gender, student_id, role, status, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+        
+        for (String dbName : multiDbManager.getAllDbNames()) {
+            try {
+                multiDbManager.getJdbcTemplate(dbName).update(
+                        sql,
+                        saved.getId(),
+                        saved.getEmail(),
+                        saved.getPasswordHash(),
+                        saved.getFullName(),
+                        saved.getPhone(),
+                        saved.getBirthDate(),
+                        saved.getGender(),
+                        saved.getStudentId(),
+                        saved.getRole(),
+                        saved.getStatus(),
+                        saved.getCreatedAt()
+                );
+            } catch (Exception ex) {
+                throw new RuntimeException("Sync user to DB " + dbName + " failed: " + ex.getMessage());
+            }
+        }
+        
         return saved.getId();
     }
 
@@ -86,7 +113,26 @@ public class AdminServiceImpl implements AdminService {
         // Cập nhật các trường còn lại từ DTO
         userCreateMapper.updateEntity(user, dto);
 
-        userRepo.save(user);
+        User updatedUser = userRepo.save(user);
+        
+        String sql = "UPDATE users SET email = ?, full_name = ?, phone = ?, birth_date = ?, " +
+                "gender = ?, student_id = ?, role = ?, status = ?, updated_at = ? WHERE id = ?";
+        
+        for (String dbName : multiDbManager.getAllDbNames()) {
+            multiDbManager.getJdbcTemplate(dbName).update(
+                    sql,
+                    updatedUser.getEmail(),
+                    updatedUser.getFullName(),
+                    updatedUser.getPhone(),
+                    updatedUser.getBirthDate(),
+                    updatedUser.getGender(),
+                    updatedUser.getStudentId(),
+                    updatedUser.getRole(),
+                    updatedUser.getStatus(),
+                    updatedUser.getUpdatedAt(),
+                    updatedUser.getId()
+            );
+        }
     }
 
     @Override
@@ -100,7 +146,18 @@ public class AdminServiceImpl implements AdminService {
         user.setStatus("deleted");
 
         // Lưu lại user với trạng thái mới
-        userRepo.save(user);
+        User deletedUser = userRepo.save(user);
+        
+        String sql = "UPDATE users SET status = ?, updated_at = ? WHERE id = ?";
+        
+        for (String dbName : multiDbManager.getAllDbNames()) {
+            multiDbManager.getJdbcTemplate(dbName).update(
+                    sql,
+                    deletedUser.getStatus(),
+                    deletedUser.getUpdatedAt(),
+                    deletedUser.getId()
+            );
+        }
     }
 
 
@@ -157,25 +214,35 @@ public class AdminServiceImpl implements AdminService {
                     .build();
 
             Course savedCourse = courseRepo.save(course);
-            // 4) Lưu đồng bộ vào các DB khác
-            String sql = "INSERT INTO courses (title, description, rating, price, duration, status, image, start_month, type, created_at, updated_at, schedule) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            String sql = """
+        INSERT INTO courses
+        (id, title, description, rating, price, duration, status, image, start_month, type, created_at, updated_at, schedule)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+
             for (String dbName : multiDbManager.getAllDbNames()) {
-                multiDbManager.getJdbcTemplate(dbName).update(
-                        sql,
-                        savedCourse.getTitle(),
-                        savedCourse.getDescription(),
-                        savedCourse.getRating(),
-                        savedCourse.getPrice(),
-                        savedCourse.getDuration(),
-                        savedCourse.getStatus(),
-                        savedCourse.getImage(),
-                        savedCourse.getStartMonth(),
-                        savedCourse.getType().toString(),
-                        savedCourse.getCreatedAt(),
-                        savedCourse.getUpdatedAt(),
-                        savedCourse.getSchedule()
-                );
+                try {
+                    multiDbManager.getJdbcTemplate(dbName).update(
+                            sql,
+                            savedCourse.getId(),
+                            savedCourse.getTitle(),
+                            savedCourse.getDescription(),
+                            savedCourse.getRating(),
+                            savedCourse.getPrice(),
+                            savedCourse.getDuration(),
+                            savedCourse.getStatus(),
+                            savedCourse.getImage(),
+                            savedCourse.getStartMonth(),
+                            savedCourse.getType().toString(),
+                            savedCourse.getCreatedAt(),
+                            savedCourse.getUpdatedAt(),
+                            savedCourse.getSchedule()
+                    );
+                } catch (Exception ex) {
+                    // ❗ Cloud best practice
+                    throw new RuntimeException("Sync DB {} failed: {}"+ex.getMessage());
+                }
             }
 
             // 3) Lưu DB

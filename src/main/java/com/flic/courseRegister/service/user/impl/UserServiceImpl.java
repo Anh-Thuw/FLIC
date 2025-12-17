@@ -11,6 +11,7 @@ import com.flic.courseRegister.repository.UserAttachmentRepository;
 import com.flic.courseRegister.repository.UserRepository;
 import com.flic.courseRegister.service.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -30,17 +32,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper mapper;
     private final UserAttachmentRepository  userAttachmentRepository;
-
-//    private JdbcTemplate db1JdbcTemplate = new JdbcTemplate(
-//            DataSourceBuilder.create()
-//                    .url("jdbc:mysql://trolley.proxy.rlwy.net:16442/railway?useSSL=false&serverTimezone=UTC")
-//                    .username("root")
-//                    .password("eKFRFTCgDfhvuEjjKaJcvdtJinnGwsku")
-//                    .driverClassName("com.mysql.cj.jdbc.Driver")
-//                    .build()
-//    );
-
-    private final MultiDbManager multiDbManager = new MultiDbManager();
+    private final MultiDbManager multiDbManager;
 
 
     @Override
@@ -85,18 +77,27 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
         System.out.println("[DEBUG] User sau khi save vào DB: " + savedUser);
 
-
-        //loop
-        String sql = "INSERT INTO users (email, password_hash, role, status, created_at) VALUES (?, ?, ?, ?, ?)";
+        String sql = """
+        INSERT INTO users
+        (id, email, password_hash, role, status, created_at)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """;
         for (String dbName : multiDbManager.getAllDbNames()) {
-            multiDbManager.getJdbcTemplate(dbName).update(
-                    sql,
-                    savedUser.getEmail(),
-                    savedUser.getPasswordHash(),
-                    savedUser.getRole(),
-                    savedUser.getStatus(),
-                    savedUser.getCreatedAt()
-            );
+            try {
+                multiDbManager.getJdbcTemplate(dbName).update(
+                        sql,
+                        savedUser.getId(),
+                        savedUser.getEmail(),
+                        savedUser.getPasswordHash(),
+                        savedUser.getRole(),
+                        savedUser.getStatus(),
+                        savedUser.getCreatedAt()
+                );
+                log.info("User {} synced to DB {}", savedUser.getEmail(), dbName);
+            } catch (Exception ex) {
+                log.error("Sync user to DB {} failed: {}", dbName, ex.getMessage());
+                // ❗ KHÔNG throw
+            }
         }
 
 

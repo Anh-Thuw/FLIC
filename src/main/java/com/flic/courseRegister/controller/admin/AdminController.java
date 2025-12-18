@@ -24,7 +24,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")   // Cần cấu hình Spring Security
+//@PreAuthorize("hasRole('ADMIN')")   // Cần cấu hình Spring Security
+@PreAuthorize("hasAnyRole('ADMIN','ACADEMIC_STAFF')")
 public class AdminController {
 
     private final AdminService service;

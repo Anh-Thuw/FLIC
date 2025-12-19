@@ -46,7 +46,9 @@ public class    SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // Cho phép frontend từ domain cụ thể gọi API
-        config.setAllowedOrigins(List.of(allowedOrigin));// team FE sau này thay ip fe vào để dùng API
+        config.setAllowedOrigins(
+                List.of(allowedOrigin.split(","))
+        );// team FE sau này thay ip fe vào để dùng API
 
         // Cho phép các HTTP method
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
